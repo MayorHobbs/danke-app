@@ -7,6 +7,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.Image
+import androidx.glance.ImageProvider
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -44,6 +46,20 @@ fun DankeWidgetContent(context: Context) {
         verticalAlignment = Alignment.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Logo in top-right corner
+        Row(
+            modifier = GlanceModifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.End
+        ) {
+            Image(
+                provider = ImageProvider(R.drawable.logo_small),
+                contentDescription = "Danke Logo",
+                modifier = GlanceModifier.size(24.dp)
+            )
+        }
+
+        Spacer(modifier = GlanceModifier.height(8.dp))
+
         // Quote section
         Text(
             text = content.quote,
@@ -98,12 +114,11 @@ fun DankeWidgetContent(context: Context) {
 
         Spacer(modifier = GlanceModifier.defaultWeight())
 
-        // Metadata + Next Day button
-        Row(
-            modifier = GlanceModifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        // Metadata + Credit
+        Column(
+            modifier = GlanceModifier.fillMaxWidth()
         ) {
-            // Domain tag + source (left side)
+            // Domain tag + source
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -131,20 +146,16 @@ fun DankeWidgetContent(context: Context) {
                 )
             }
 
-            Spacer(GlanceModifier.defaultWeight())
+            Spacer(modifier = GlanceModifier.height(4.dp))
 
-            // Next button (right side)
+            // Credit footer
             Text(
-                text = "Next →",
+                text = "by Mayor Hobbs",
                 style = TextStyle(
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = ColorProvider(Color(0xFFC9A961))
-                ),
-                modifier = GlanceModifier
-                    .clickable(actionRunCallback<NextDayCallback>())
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                    .background(Color(0xFFC9A961).copy(alpha = 0.2f))
+                    fontSize = 9.sp,
+                    color = ColorProvider(Color(0xFFA0A0A0).copy(alpha = 0.5f)),
+                    fontWeight = FontWeight.Light
+                )
             )
         }
     }
