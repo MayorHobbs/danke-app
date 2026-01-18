@@ -13,7 +13,6 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
-import androidx.glance.appwidget.update
 import androidx.glance.background
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
@@ -102,7 +101,6 @@ fun DankeWidgetContent(context: Context) {
         // Metadata + Next Day button
         Row(
             modifier = GlanceModifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Domain tag + source (left side)
@@ -132,6 +130,8 @@ fun DankeWidgetContent(context: Context) {
                     maxLines = 1
                 )
             }
+
+            Spacer(GlanceModifier.defaultWeight())
 
             // Next button (right side)
             Text(
