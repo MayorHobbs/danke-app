@@ -1,0 +1,590 @@
+# Danke! - Design System Document
+
+**Version:** 1.0  
+**Last Updated:** January 18, 2026  
+**Status:** Pre-Development  
+
+---
+
+## 1. DESIGN PHILOSOPHY
+
+**Core Principles:**
+- **Clarity over decoration** - Information-first, no visual noise
+- **Intentional minimalism** - Every pixel serves a purpose
+- **Philosophical weight** - Design conveys depth and thoughtfulness
+- **Calm technology** - Widget doesn't scream for attention
+
+**Inspirations:**
+- Dan Koe's website aesthetic (clean, typography-focused)
+- Brutalist web design (function over form)
+- Apple Human Interface Guidelines (system integration)
+- Dieter Rams principles (less but better)
+
+---
+
+## 2. COLOR SYSTEM
+
+### 2.1 Primary Palette
+
+**Dark Mode First** (Default)
+
+```
+Background Colors:
+├── Primary BG:    #0A0A0A (near-black, softer than pure black)
+├── Secondary BG:  #1A1A1A (elevated surfaces)
+└── Tertiary BG:   #2A2A2A (cards, widgets)
+
+Text Colors:
+├── Primary Text:  #F5F5F5 (off-white, easier on eyes)
+├── Secondary Text:#A0A0A0 (muted gray for metadata)
+└── Accent Text:   #E8DCC4 (warm cream for quotes)
+
+Accent Colors:
+├── Primary Accent: #C9A961 (muted gold - wisdom, value)
+├── Success:        #7FA66A (sage green - completion)
+├── Warning:        #D4976B (terracotta - attention)
+└── Domain Tags:
+    ├── Consciousness: #8B7FB8 (purple)
+    ├── Health:        #7FA66A (green)
+    ├── Wealth:        #C9A961 (gold)
+    └── Relationships: #B87F8F (rose)
+```
+
+**Light Mode** (Optional, lower priority)
+
+```
+Background Colors:
+├── Primary BG:    #FFFFFF
+├── Secondary BG:  #F8F8F8
+└── Tertiary BG:   #F0F0F0
+
+Text Colors:
+├── Primary Text:  #0A0A0A
+├── Secondary Text:#6A6A6A
+└── Accent Text:   #3D3427 (dark brown for quotes)
+
+Accent Colors:
+├── Primary Accent: #8B6F3F (darker gold)
+└── (Same domain tags, adjusted for contrast)
+```
+
+### 2.2 Color Usage Rules
+
+**Widget Background:**
+- iOS: System background with blur (adapts to wallpaper)
+- Android: Solid `#1A1A1A` with subtle gradient
+
+**Text Hierarchy:**
+```
+Quote Text:    #E8DCC4 (warm cream) - stands out as primary content
+Action Text:   #F5F5F5 (off-white) - secondary but readable
+Metadata:      #A0A0A0 (gray) - source, duration, domain tag
+```
+
+**Never Use:**
+- ❌ Pure black (#000000) - too harsh
+- ❌ Pure white (#FFFFFF) in dark mode - eye strain
+- ❌ Saturated colors - conflicts with calm aesthetic
+- ❌ Gradients (except subtle widget background)
+
+---
+
+## 3. TYPOGRAPHY
+
+### 3.1 Font Families
+
+**Serif (Quotes):**
+- **iOS:** Georgia (system serif, philosophical weight)
+- **Android:** Serif (Noto Serif fallback)
+- **Reasoning:** Serif conveys authority, timelessness, depth
+
+**Sans-Serif (Actions & UI):**
+- **iOS:** SF Pro (Apple system font)
+- **Android:** Roboto (Material Design standard)
+- **Reasoning:** Clean, functional, high legibility
+
+### 3.2 Type Scale
+
+**Widget (Home Screen)**
+```
+Quote Text:
+├── Font: Georgia (Serif)
+├── Size: 15pt (iOS) / 16sp (Android)
+├── Line Height: 1.4 (breathing room)
+├── Weight: Regular
+└── Color: #E8DCC4
+
+Action Text:
+├── Font: SF Pro / Roboto
+├── Size: 13pt (iOS) / 14sp (Android)
+├── Line Height: 1.3
+├── Weight: Medium
+└── Color: #F5F5F5
+
+Metadata (source, duration):
+├── Font: SF Pro / Roboto
+├── Size: 11pt (iOS) / 12sp (Android)
+├── Weight: Regular
+└── Color: #A0A0A0
+```
+
+**Widget (Lock Screen - iOS)**
+```
+Quote Only (space-constrained):
+├── Font: SF Pro (system constraint)
+├── Size: 12pt
+├── Lines: Max 3 (truncate with "...")
+└── Color: System foreground
+```
+
+**App Interior**
+```
+Headings (H1):
+├── Font: SF Pro Bold / Roboto Bold
+├── Size: 28pt / 28sp
+└── Color: #F5F5F5
+
+Body Text:
+├── Font: SF Pro / Roboto
+├── Size: 16pt / 16sp
+├── Line Height: 1.5
+└── Color: #F5F5F5
+
+Captions:
+├── Font: SF Pro / Roboto
+├── Size: 13pt / 13sp
+└── Color: #A0A0A0
+```
+
+### 3.3 Text Formatting Rules
+
+**Quote Display:**
+- Always use **curly quotes** ("like this" not "like this")
+- Em dashes (—) not hyphens (-)
+- No all-caps (except acronyms)
+- Align left (never center)
+
+**Action Display:**
+- Start with verb ("Write...", "Identify...", "Ask...")
+- Include duration in parentheses: "(15 min)"
+- Use checkboxes (□) not bullets
+
+---
+
+## 4. LAYOUT & SPACING
+
+### 4.1 Widget Dimensions
+
+**iOS Small Widget (Home Screen)**
+```
+Canvas: 158x158 pt (@3x scale)
+Safe Area: 144x144 pt (accounting for corner radius)
+
+Layout:
+┌─────────────────────┐
+│ ┌─── Quote ────┐    │ ← 16pt top padding
+│ │ 3-4 lines    │    │
+│ │ max height   │    │
+│ └──────────────┘    │
+│                     │
+│ ┌─── Action ───┐   │ ← 12pt spacing
+│ │ 2-3 lines    │   │
+│ │ with □       │   │
+│ └──────────────┘   │
+│                     │
+│ [Source] [Duration] │ ← 8pt from bottom
+└─────────────────────┘
+```
+
+**iOS Medium Widget (Home Screen)**
+```
+Canvas: 338x158 pt
+Use: Expanded quote + action side-by-side
+Priority: Build Small first, Medium optional
+```
+
+**iOS Lock Screen Widget**
+```
+Rectangular:
+├── Height: 2 lines max
+├── Content: Quote only (truncated)
+└── No interactions (display only)
+```
+
+**Android Widget (4x2 grid cells)**
+```
+Canvas: ~280x140 dp (varies by launcher)
+Layout: Same as iOS Small
+Corner radius: 16dp (Material Design standard)
+```
+
+### 4.2 Spacing System
+
+**Base Unit: 8pt/dp** (multiples of 8 for consistency)
+
+```
+Spacing Scale:
+├── XXS: 4pt  (tight text spacing)
+├── XS:  8pt  (default element spacing)
+├── S:   12pt (between quote and action)
+├── M:   16pt (widget padding)
+├── L:   24pt (section spacing in app)
+├── XL:  32pt (major layout divisions)
+└── XXL: 48pt (onboarding screens)
+```
+
+**Widget Internal Padding:**
+```
+iOS: 16pt all sides (system requirement)
+Android: 16dp all sides (Material guideline)
+```
+
+---
+
+## 5. COMPONENTS
+
+### 5.1 Widget Component (Home Screen)
+
+**Anatomy:**
+```
+┌─────────────────────────────┐
+│  Quote Section              │
+│  ┌─────────────────────┐    │
+│  │ "Serif quote text   │    │ ← Georgia 15pt, #E8DCC4
+│  │  spanning 3-4 lines │    │   Line height 1.4
+│  │  with wisdom."      │    │
+│  └─────────────────────┘    │
+│                             │
+│  Action Section             │
+│  ┌─────────────────────┐   │
+│  │ □ Sans-serif action │   │ ← SF Pro 13pt, #F5F5F5
+│  │   task here (15min) │   │   Checkbox unchecked
+│  └─────────────────────┘   │
+│                             │
+│  [Wealth] • The Art of Focus│ ← Metadata 11pt, #A0A0A0
+└─────────────────────────────┘
+```
+
+**States:**
+- **Default:** As shown above
+- **Action Completed:** Checkbox filled (✓), action text strikethrough
+- **Tapped:** Subtle scale animation → opens app
+
+### 5.2 Domain Tag Component
+
+**Visual:**
+```
+[Consciousness]  ← Rounded rectangle
+  ↓
+Background: #8B7FB850 (50% opacity)
+Border: 1pt solid #8B7FB8
+Text: 11pt SF Pro Medium, #8B7FB8
+Padding: 4pt horizontal, 2pt vertical
+Corner Radius: 4pt
+```
+
+**Color Mapping:**
+```
+Consciousness → Purple (#8B7FB8)
+Health        → Green (#7FA66A)
+Wealth        → Gold (#C9A961)
+Relationships → Rose (#B87F8F)
+```
+
+### 5.3 Checkbox Component
+
+**Unchecked:**
+```
+□  ← 20pt square
+   Border: 2pt #F5F5F5
+   Corner radius: 4pt
+   Fill: transparent
+```
+
+**Checked:**
+```
+☑  ← 20pt square
+   Border: 2pt #7FA66A (success green)
+   Fill: #7FA66A
+   Checkmark: White, 14pt
+```
+
+**Interaction:**
+- Tap: Fills with spring animation
+- Persists state in UserDefaults
+
+### 5.4 App Screen Layout
+
+**Today Tab:**
+```
+┌──────────────────────┐
+│ ╔══════════════════╗ │ ← Widget preview (same as home screen)
+│ ║  Today's Content ║ │
+│ ╚══════════════════╝ │
+│                      │
+│ [Mark Complete]      │ ← Button (full width)
+│                      │
+│ Optional Reflection: │
+│ ┌──────────────────┐ │ ← Text input (appears after complete)
+│ │ What did you    │ │
+│ │ learn?          │ │
+│ └──────────────────┘ │
+└──────────────────────┘
+```
+
+---
+
+## 6. ICONOGRAPHY
+
+**Minimal Icon Usage:**
+- App icon: Stylized "D!" mark (design TBD)
+- Domain icons: None (use color tags only)
+- Checkboxes: Standard UI kit
+
+**App Icon Concept:**
+```
+Dark background (#0A0A0A)
+"D!" in warm cream (#E8DCC4)
+Font: Custom geometric sans
+No gradients, no shadows
+```
+
+---
+
+## 7. MOTION & INTERACTION
+
+### 7.1 Widget Animations
+
+**Refresh Animation:**
+```
+On midnight update:
+├── Fade out old content (0.2s ease-out)
+├── Scale in new content (0.3s spring)
+└── Subtle vertical slide (12pt upward)
+```
+
+**Tap Feedback:**
+```
+On widget tap:
+├── Scale down to 0.95 (0.1s)
+├── Scale back to 1.0 (0.2s spring)
+└── Open app with system transition
+```
+
+### 7.2 App Animations
+
+**Principles:**
+- **Fast:** 0.2-0.3s max (never sluggish)
+- **Purposeful:** Motion explains state changes
+- **Natural:** Spring curves, not linear
+
+**Examples:**
+```
+Checkbox Tap:
+└── Spring scale: 1.0 → 1.2 → 1.0 (0.3s)
+
+Mark Complete Button:
+└── Success pulse: Background flashes green (0.4s)
+
+Screen Transitions:
+└── Slide right (push) / Slide left (pop)
+```
+
+---
+
+## 8. ACCESSIBILITY
+
+### 8.1 Requirements
+
+**Text Contrast:**
+- All text must meet WCAG AA (4.5:1 for body, 3:1 for large)
+- Quote (#E8DCC4 on #1A1A1A): **8.2:1 ✓**
+- Action (#F5F5F5 on #1A1A1A): **12.6:1 ✓**
+
+**Dynamic Type:**
+- Support iOS Dynamic Type (automatically scales)
+- Test at largest accessibility sizes
+
+**VoiceOver / TalkBack:**
+```
+Widget Accessibility Label:
+"Quote: [quote text]. Action: [action text]. 
+ From [source]. Estimated time: [duration]."
+
+Checkbox:
+"Mark action as complete. Currently unchecked."
+```
+
+**Reduced Motion:**
+- Respect system setting
+- Replace animations with instant transitions
+
+### 8.2 Color Blind Considerations
+
+**Domain Tags:**
+- Don't rely solely on color
+- Include text labels always
+- Test with:
+  - Protanopia (red-blind)
+  - Deuteranopia (green-blind)
+  - Tritanopia (blue-blind)
+
+**Gold (#C9A961) vs Green (#7FA66A):**
+- Sufficient luminance difference
+- Both readable against dark background
+
+---
+
+## 9. RESPONSIVE DESIGN
+
+### 9.1 Widget Size Variants
+
+**iOS:**
+```
+Small (2x2):  Primary design (ship first)
+Medium (4x2): Side-by-side quote + action (optional)
+Large (4x4):  Not used (overkill for daily widget)
+Lock Screen:  Compact quote only (rectangular)
+```
+
+**Android:**
+```
+4x2 cells: Primary design (matches iOS Small)
+4x4 cells: Optional expansion (V2)
+Lock Screen: Android 14+ only
+```
+
+### 9.2 Text Overflow Handling
+
+**Quote Text:**
+```
+Max lines: 4
+Overflow: Truncate with "..." (ellipsis)
+Prioritize: First 3 lines + "..." over squishing font
+```
+
+**Action Text:**
+```
+Max lines: 3
+Overflow: Truncate with "..."
+Never: Reduce font size below 13pt
+```
+
+**Metadata:**
+```
+Strategy: Abbreviate if needed
+"The Art of Focus" → "Art of Focus" → "AoF"
+"15 minutes" → "15 min" → "15m"
+```
+
+---
+
+## 10. DARK MODE / LIGHT MODE
+
+**Priority: Dark Mode**
+- Ship dark mode first
+- Light mode in V2 (if users request)
+
+**Auto-Switch:**
+- Respect system appearance setting
+- No in-app toggle initially (reduce complexity)
+
+**Light Mode Adjustments:**
+```
+Quote text: #3D3427 (dark brown, not black)
+Action text: #0A0A0A (near-black)
+Background: #FFFFFF → #F8F8F8 (softer)
+Domain tags: Darker variants for contrast
+```
+
+---
+
+## 11. PLATFORM-SPECIFIC GUIDELINES
+
+### 11.1 iOS Human Interface Guidelines
+
+**Compliance:**
+- ✅ SF Symbols for system icons (if any)
+- ✅ System spacing (16pt widget padding)
+- ✅ Corner radius matches system widgets
+- ✅ Respect safe areas
+- ✅ Support Dynamic Type
+
+**Widget Specific:**
+- Use `ContainerBackground` modifier (iOS 17+)
+- Timeline updates via `TimelineProvider`
+- No interactive elements in widget (tap opens app)
+
+### 11.2 Android Material Design
+
+**Compliance:**
+- ✅ Material 3 color system (adapted)
+- ✅ 16dp padding standard
+- ✅ Roboto font family
+- ✅ 16dp corner radius
+- ✅ Elevation: 2dp (subtle shadow)
+
+**Widget Specific:**
+- Use Glance composables (not traditional Views)
+- Update via `GlanceAppWidgetReceiver`
+- Support click actions (opens app)
+
+---
+
+## 12. BRAND VOICE (UI Copy)
+
+**Principles:**
+- **Direct, not clever:** "Mark Complete" not "Got it!"
+- **Respectful, not casual:** "Reflect on today" not "How'd it go?"
+- **Philosophical, not motivational:** Avoid "You can do this!"
+
+**Examples:**
+
+**Good:**
+- "What did you learn from today's action?"
+- "Choose your area of focus"
+- "Today's wisdom"
+
+**Bad:**
+- "You crushed it! 🎉"
+- "Level up your mindset!"
+- "Daily dose of inspiration"
+
+---
+
+## 13. DESIGN ASSETS CHECKLIST
+
+Before development:
+
+- [ ] Export color palette as iOS/Android config files
+- [ ] Prepare app icon (1024x1024 source)
+- [ ] Create widget preview screenshots (for App Store)
+- [ ] Document component specs (this file)
+- [ ] Prepare example content (10 quote/action pairs for testing)
+
+---
+
+## 14. DESIGN VALIDATION
+
+**Pre-Launch Testing:**
+
+**Visual Regression:**
+- Screenshot widgets on iPhone 15 Pro, Pixel 8
+- Compare against Figma specs (if designed)
+
+**Edge Cases:**
+```
+- Very long quotes (100+ characters)
+- Very short quotes (10 characters)
+- Actions with special characters ("&", "—", etc.)
+- Non-English characters (test UTF-8 support)
+- Multiple widgets on one screen (iOS allows this)
+```
+
+**User Testing:**
+- 5-10 beta users provide feedback
+- Questions: "Is the quote readable at a glance?" "Is the action clear?"
+
+---
+
+**Next Document:** `implementation-plan.md` (Step-by-Step Build Roadmap)

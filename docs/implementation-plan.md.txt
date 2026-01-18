@@ -1,0 +1,1443 @@
+# Danke! - Implementation Plan (Vertical Slices)
+
+**Version:** 1.0  
+**Last Updated:** January 18, 2026  
+**Status:** Pre-Development  
+**Build Strategy:** Meta_Alchemist's Vertical Slice Methodology  
+
+---
+
+## OVERVIEW: VERTICAL SLICE APPROACH
+
+**Philosophy:**
+Build complete **end-to-end features** incrementally, not horizontal layers.
+
+**Bad (Horizontal):**
+```
+❌ Week 1: Build all backend
+❌ Week 2: Build all UI
+❌ Week 3: Connect them
+   Problem: Nothing works until Week 3
+```
+
+**Good (Vertical):**
+```
+✅ Week 1: MVP widget with hardcoded content (WORKS)
+✅ Week 2: Dynamic content loading (WORKS)
+✅ Week 3: Full iOS widget + app (WORKS)
+✅ Week 4: Android port (WORKS)
+   Benefit: Always have a working demo
+```
+
+---
+
+## PHASE 0: PRE-DEVELOPMENT SETUP
+
+**Estimated Time:** 1-2 hours  
+**Outcome:** Environment ready, first commit made  
+
+### Tasks:
+
+**1. GitHub Repository Setup**
+```bash
+# Create repo
+gh repo create danke-app --public --description "Daily wisdom widget based on Dan Koe's philosophy"
+
+# Initialize with structure
+mkdir -p danke-app/{ios,android,content,docs}
+cd danke-app
+
+# Add gitignore
+curl -o .gitignore https://raw.githubusercontent.com/github/gitignore/main/Swift.gitignore
+cat >> .gitignore << EOF
+
+# Android
+*.apk
+*.aab
+local.properties
+
+# Content
+content/archive/
+EOF
+
+# Initial commit
+git add .
+git commit -m "chore: initialize repository structure"
+git push -u origin main
+```
+
+**2. Documentation Setup**
+```bash
+# Move all planning docs to repo
+mv prd.md docs/
+mv architecture.md docs/
+mv design-system.md docs/
+mv implementation-plan.md docs/
+
+# Create living documents
+touch CHANGELOG.md
+touch FEATURES.md
+touch README.md
+
+# Commit
+git add .
+git commit -m "docs: add PRD, architecture, and design specs"
+git push
+```
+
+**3. Vibeship Spawner Skills Installation** (Desktop Only)
+```bash
+# Install spawner skills globally
+npx github:vibeforge1111/vibeship-spawner-skills install --mcp
+
+# Verify installation
+npx vibeship-spawner-skills list
+# Should see: mobile/ios-widgets, mobile/android-widgets, etc.
+```
+
+**4. Content Preparation**
+```bash
+# Create initial content structure
+mkdir content
+touch content/content.json
+touch content/schema.json
+touch content/curation-notes.md
+
+# Add schema first
+cat > content/schema.json << 'EOF'
+{
+  "version": "1.0",
+  "structure": {
+    "day": "integer (1-364)",
+    "quote": "string (15-50 words)",
+    "quoteSource": "string (article title)",
+    "action": "string (specific task)",
+    "actionDuration": "string (e.g., '15 min')",
+    "domain": "enum (consciousness, health, wealth, relationships)",
+    "difficulty": "enum (beginner, intermediate, advanced)"
+  }
+}
+EOF
+
+git add content/
+git commit -m "feat: add content schema and structure"
+git push
+```
+
+**Checkpoint:** 
+- [ ] GitHub repo initialized
+- [ ] Documentation committed
+- [ ] Spawner skills installed (if desktop)
+- [ ] Content schema defined
+
+---
+
+## PHASE 1: iOS MVP - HARDCODED WIDGET
+
+**Estimated Time:** 1 week (10-15 hours)  
+**Outcome:** Working iOS widget with Day 1 content  
+**Agent:** Spawn `mobile/ios-widgets` specialist  
+
+### 1.1 Create Xcode Project (Day 1)
+
+**Steps:**
+```bash
+# Open Xcode, create new iOS App
+# Name: Danke
+# Organization: com.yourusername
+# Interface: SwiftUI
+# Language: Swift
+
+# Add Widget Extension
+# File → New → Target → Widget Extension
+# Name: DankeWidget
+# Include Configuration Intent: NO (not yet)
+```
+
+**Commit:**
+```bash
+git add ios/
+git commit -m "feat(ios): initialize Xcode project with widget extension"
+git push
+```
+
+### 1.2 Build Hardcoded Widget (Day 1-2)
+
+**Prompt for AI (Spawner Skill):**
+```
+Spawn mobile/ios-widgets specialist.
+
+Build an iOS WidgetKit widget with:
+- Small size only (2x2)
+- Hardcoded content:
+  Quote: "Focus is the ability to say no to everything except what matters most."
+  Action: "Write down 3 things you're saying yes to that don't align with your goals."
+  Source: "The Art of Focus"
+  Duration: "10 min"
+  Domain: "Consciousness"
+
+Design specs:
+- Background: #1A1A1A
+- Quote: Georgia 15pt, #E8DCC4
+- Action: SF Pro 13pt, #F5F5F5
+- Metadata: SF Pro 11pt, #A0A0A0
+- Padding: 16pt all sides
+- Checkbox: 20pt square, #F5F5F5 border
+
+Make it visually identical to the design-system.md specs.
+```
+
+**Expected Output:**
+```swift
+// DankeWidget.swift
+struct DankeWidget: Widget {
+    let kind: String = "DankeWidget"
+    
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+            DankeWidgetEntryView(entry: entry)
+        }
+        .configurationDisplayName("Danke!")
+        .description("Daily wisdom and actionable tasks")
+        .supportedFamilies([.systemSmall])
+    }
+}
+
+struct DankeWidgetEntryView: View {
+    var entry: Provider.Entry
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            // Quote section
+            Text("Focus is the ability to say no to everything except what matters most.")
+                .font(.custom("Georgia", size: 15))
+                .foregroundColor(Color(hex: "#E8DCC4"))
+                .lineLimit(4)
+            
+            // Action section
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: "square")
+                    .font(.system(size: 20))
+                    .foregroundColor(Color(hex: "#F5F5F5"))
+                
+                Text("Write down 3 things you're saying yes to that don't align with your goals.")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundColor(Color(hex: "#F5F5F5"))
+                    .lineLimit(3)
+            }
+            
+            Spacer()
+            
+            // Metadata
+            HStack {
+                Text("Consciousness")
+                    .font(.system(size: 11))
+                    .foregroundColor(Color(hex: "#8B7FB8"))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color(hex: "#8B7FB850"))
+                    .cornerRadius(4)
+                
+                Text("• The Art of Focus")
+                    .font(.system(size: 11))
+                    .foregroundColor(Color(hex: "#A0A0A0"))
+            }
+        }
+        .padding(16)
+        .background(Color(hex: "#1A1A1A"))
+    }
+}
+```
+
+**Test Checklist:**
+- [ ] Widget appears in widget gallery
+- [ ] Tapping widget opens app
+- [ ] Visual design matches specs
+- [ ] Text is readable at small size
+- [ ] No crashes or warnings
+
+**Commit:**
+```bash
+git add ios/DankeWidget/
+git commit -m "feat(ios): hardcoded widget with Day 1 content"
+git push
+```
+
+**Update CHANGELOG.md:**
+```markdown
+## [0.1.0] - 2026-01-XX
+
+### Added
+- iOS Small Widget with hardcoded content
+- Design system implementation (Georgia serif, color palette)
+- Widget extension target in Xcode project
+```
+
+**Update FEATURES.md:**
+```markdown
+# Implemented Features
+
+## iOS Widget
+- [x] Small widget (2x2 grid)
+- [x] Hardcoded Day 1 content
+- [x] Visual design matching specs
+- [ ] Dynamic content loading
+- [ ] Daily refresh
+
+## Android Widget
+- [ ] Not started
+
+## Companion App
+- [ ] Not started
+```
+
+---
+
+## PHASE 2: DYNAMIC CONTENT SYSTEM
+
+**Estimated Time:** 3-5 days  
+**Outcome:** Widget loads from JSON, rotates daily  
+**Agent:** Continue with `mobile/ios-widgets` + spawn `development/ios`  
+
+### 2.1 Create Content JSON (Day 3)
+
+**Manually Curate First 7 Days:**
+
+**Prompt for AI (Content Specialist):**
+```
+Spawn content/copywriting specialist.
+
+Analyze Dan Koe's philosophy from these themes:
+- Focus and attention management
+- One-person business building
+- Consciousness expansion
+- Health as foundation
+- Value creation
+
+Generate 7 days of quote/action pairs following this JSON schema:
+[paste schema from content/schema.json]
+
+Requirements:
+- Quotes: 15-50 words, philosophically dense
+- Actions: Specific, timeboxed (5-30 min), beginner-friendly
+- Balance domains: 2 Consciousness, 2 Wealth, 2 Health, 1 Relationships
+- Match Dan Koe's tone (direct, philosophical, practical)
+```
+
+**Expected Output:**
+```json
+[
+  {
+    "day": 1,
+    "quote": "Focus is the ability to say no to everything except what matters most.",
+    "quoteSource": "The Art of Focus",
+    "action": "Write down 3 things you're saying yes to that don't align with your goals. Cross one out.",
+    "actionDuration": "10 min",
+    "domain": "consciousness",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 2,
+    "quote": "Your health is the foundation of everything else. Without energy, ideas remain ideas.",
+    "quoteSource": "4-Hour Workday",
+    "action": "Walk for 20 minutes and observe your breath quality. Note when it becomes shallow.",
+    "actionDuration": "20 min",
+    "domain": "health",
+    "difficulty": "beginner"
+  },
+  // ... 5 more days
+]
+```
+
+**Commit:**
+```bash
+git add content/content.json
+git commit -m "content: add first 7 days of quotes and actions"
+git push
+```
+
+### 2.2 Build Content Loader Service (Day 4)
+
+**Prompt for AI:**
+```
+Create a ContentService.swift that:
+1. Loads content.json from app bundle
+2. Parses into DailyContent model
+3. Returns content for a given day number
+4. Handles errors gracefully (fallback to Day 1)
+
+Use modern Swift (async/await, Codable).
+```
+
+**Expected Files:**
+```
+ios/Danke/Models/DailyContent.swift
+ios/Danke/Services/ContentService.swift
+ios/Danke/Services/UserPreferences.swift
+```
+
+**DailyContent.swift:**
+```swift
+struct DailyContent: Codable, Identifiable {
+    let day: Int
+    let quote: String
+    let quoteSource: String
+    let action: String
+    let actionDuration: String
+    let domain: Domain
+    let difficulty: Difficulty
+    
+    var id: Int { day }
+}
+
+enum Domain: String, Codable {
+    case consciousness, health, wealth, relationships
+    
+    var color: String {
+        switch self {
+        case .consciousness: return "#8B7FB8"
+        case .health: return "#7FA66A"
+        case .wealth: return "#C9A961"
+        case .relationships: return "#B87F8F"
+        }
+    }
+}
+
+enum Difficulty: String, Codable {
+    case beginner, intermediate, advanced
+}
+```
+
+**ContentService.swift:**
+```swift
+class ContentService {
+    static let shared = ContentService()
+    private var allContent: [DailyContent] = []
+    
+    init() {
+        loadContent()
+    }
+    
+    func loadContent() {
+        guard let url = Bundle.main.url(forResource: "content", withExtension: "json"),
+              let data = try? Data(contentsOf: url),
+              let content = try? JSONDecoder().decode([DailyContent].self, from: data) else {
+            print("Failed to load content")
+            return
+        }
+        allContent = content
+    }
+    
+    func getContent(forDay day: Int) -> DailyContent? {
+        // Handle looping (day 8 wraps to day 1 if only 7 days)
+        let index = (day - 1) % allContent.count
+        return allContent.indices.contains(index) ? allContent[index] : nil
+    }
+    
+    func getCurrentDayContent() -> DailyContent {
+        let currentDay = UserPreferences.shared.currentDay
+        return getContent(forDay: currentDay) ?? allContent[0]
+    }
+}
+```
+
+**UserPreferences.swift (Simple UserDefaults wrapper):**
+```swift
+class UserPreferences {
+    static let shared = UserPreferences()
+    
+    private let defaults = UserDefaults(suiteName: "group.com.yourusername.danke")!
+    
+    var currentDay: Int {
+        get { defaults.integer(forKey: "currentDay") == 0 ? 1 : defaults.integer(forKey: "currentDay") }
+        set { defaults.set(newValue, forKey: "currentDay") }
+    }
+    
+    func incrementDay() {
+        currentDay += 1
+    }
+}
+```
+
+**Commit:**
+```bash
+git add ios/Danke/Models/ ios/Danke/Services/
+git commit -m "feat(ios): add content loading service and models"
+git push
+```
+
+### 2.3 Update Widget to Use Dynamic Content (Day 4)
+
+**Prompt for AI:**
+```
+Update DankeWidget to:
+1. Load content from ContentService instead of hardcoded
+2. Use current day from UserPreferences
+3. Update TimelineProvider to refresh at midnight
+4. Add App Group for data sharing between widget and app
+```
+
+**App Group Setup:**
+```
+1. Xcode → Target → Signing & Capabilities
+2. Add "App Groups" capability
+3. Create: group.com.yourusername.danke
+4. Add to BOTH main app and widget extension
+```
+
+**Updated TimelineProvider:**
+```swift
+struct Provider: TimelineProvider {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+        let currentContent = ContentService.shared.getCurrentDayContent()
+        
+        // Create entry for right now
+        let currentDate = Date()
+        let entry = SimpleEntry(date: currentDate, content: currentContent)
+        
+        // Schedule next refresh at midnight
+        var calendar = Calendar.current
+        calendar.timeZone = TimeZone.current
+        let midnight = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: currentDate)!)
+        
+        let timeline = Timeline(entries: [entry], policy: .after(midnight))
+        completion(timeline)
+    }
+}
+```
+
+**Test:**
+- [ ] Widget shows Day 1 content
+- [ ] Changing `currentDay` in UserPreferences updates widget
+- [ ] Widget refreshes at midnight (simulate by changing device time)
+
+**Commit:**
+```bash
+git add ios/DankeWidget/
+git commit -m "feat(ios): dynamic content loading in widget"
+git push
+```
+
+---
+
+## PHASE 3: MINIMAL COMPANION APP
+
+**Estimated Time:** 3-5 days  
+**Outcome:** Basic app to view content and configure widget  
+**Agent:** Continue with `development/ios`  
+
+### 3.1 Build Today Tab (Day 5-6)
+
+**Prompt for AI:**
+```
+Create TodayView.swift:
+- Show large version of current day's quote and action
+- "Mark Complete" button (toggles checkbox state)
+- Optional reflection text field (appears after marking complete)
+- Save reflection to UserDefaults
+
+Match design-system.md specs for app interior.
+```
+
+**TodayView.swift Structure:**
+```swift
+struct TodayView: View {
+    @State private var content: DailyContent
+    @State private var isCompleted: Bool = false
+    @State private var reflectionText: String = ""
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // Quote card
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(content.quote)
+                        .font(.custom("Georgia", size: 18))
+                        .foregroundColor(Color(hex: "#E8DCC4"))
+                    
+                    Text(content.quoteSource)
+                        .font(.system(size: 13))
+                        .foregroundColor(Color(hex: "#A0A0A0"))
+                }
+                .padding()
+                .background(Color(hex: "#2A2A2A"))
+                .cornerRadius(12)
+                
+                // Action card
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(alignment: .top) {
+                        Image(systemName: isCompleted ? "checkmark.square.fill" : "square")
+                            .font(.system(size: 24))
+                            .foregroundColor(isCompleted ? Color(hex: "#7FA66A") : Color(hex: "#F5F5F5"))
+                        
+                        Text(content.action)
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(Color(hex: "#F5F5F5"))
+                            .strikethrough(isCompleted)
+                    }
+                    
+                    Text("Estimated time: \(content.actionDuration)")
+                        .font(.system(size: 13))
+                        .foregroundColor(Color(hex: "#A0A0A0"))
+                }
+                .padding()
+                .background(Color(hex: "#2A2A2A"))
+                .cornerRadius(12)
+                
+                // Mark Complete button
+                Button(action: { isCompleted.toggle() }) {
+                    Text(isCompleted ? "Completed ✓" : "Mark Complete")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(isCompleted ? Color(hex: "#7FA66A") : Color(hex: "#C9A961"))
+                        .foregroundColor(Color(hex: "#0A0A0A"))
+                        .cornerRadius(8)
+                }
+                
+                // Reflection (appears after completion)
+                if isCompleted {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("What did you learn?")
+                            .font(.system(size: 16, weight: .medium))
+                        
+                        TextEditor(text: $reflectionText)
+                            .frame(height: 100)
+                            .padding(8)
+                            .background(Color(hex: "#2A2A2A"))
+                            .cornerRadius(8)
+                    }
+                }
+            }
+            .padding()
+        }
+        .background(Color(hex: "#0A0A0A"))
+    }
+}
+```
+
+**Commit:**
+```bash
+git add ios/Danke/Views/TodayView.swift
+git commit -m "feat(ios): add Today tab with completion tracking"
+git push
+```
+
+### 3.2 Add Browse and Settings Tabs (Day 7)
+
+**Browse Tab:**
+- Grid calendar showing all 7 days (or 364 when full)
+- Tap to see any day's content
+- Filter by domain (optional)
+
+**Settings Tab:**
+- Domain focus preference picker
+- Widget refresh time (placeholder for V2)
+- About/Credits section
+
+**Commit:**
+```bash
+git add ios/Danke/Views/BrowseView.swift ios/Danke/Views/SettingsView.swift
+git commit -m "feat(ios): add Browse and Settings tabs"
+git push
+```
+
+**Update CHANGELOG.md:**
+```markdown
+## [0.2.0] - 2026-01-XX
+
+### Added
+- Dynamic content loading from JSON
+- Content service with daily rotation
+- Minimal companion app with 3 tabs (Today, Browse, Settings)
+- Action completion tracking
+- Reflection journal (local storage)
+```
+
+---
+
+## PHASE 4: ANDROID PORT
+
+**Estimated Time:** 1-2 weeks  
+**Outcome:** Feature-parity Android widget and app  
+**Agent:** Spawn `mobile/android-widgets` specialist  
+
+### 4.1 Setup Android Project (Day 8)
+
+**Steps:**
+```bash
+# Open Android Studio
+# New Project → Empty Compose Activity
+# Name: Danke
+# Package: com.yourusername.danke
+# Minimum SDK: API 31 (Android 12)
+
+# Add Glance dependency in build.gradle
+dependencies {
+    implementation "androidx.glance:glance-appwidget:1.0.0"
+    implementation "androidx.glance:glance-material3:1.0.0"
+}
+```
+
+**Commit:**
+```bash
+git add android/
+git commit -m "feat(android): initialize Android project with Glance"
+git push
+```
+
+### 4.2 Port Content System (Day 9)
+
+**Copy content.json to Android assets:**
+```bash
+cp content/content.json android/app/src/main/assets/
+```
+
+**Create Kotlin models (same structure as iOS):**
+```kotlin
+data class DailyContent(
+    val day: Int,
+    val quote: String,
+    val quoteSource: String,
+    val action: String,
+    val actionDuration: String,
+    val domain: Domain,
+    val difficulty: Difficulty
+)
+
+enum class Domain(val color: String) {
+    CONSCIOUSNESS("#8B7FB8"),
+    HEALTH("#7FA66A"),
+    WEALTH("#C9A961"),
+    RELATIONSHIPS("#B87F8F")
+}
+```
+
+**Commit:**
+```bash
+git add android/app/src/main/java/models/
+git commit -m "feat(android): add content models and JSON loading"
+git push
+```
+
+### 4.3 Build Glance Widget (Day 10-11)
+
+**Prompt for AI (Spawner Skill):**
+```
+Spawn mobile/android-widgets specialist.
+
+Build an Android Glance widget matching the iOS design:
+- 4x2 cell size
+- Load content from assets/content.json
+- Match color scheme and typography from design-system.md
+- Update at midnight via AlarmManager
+```
+
+**DankeWidget.kt:**
+```kotlin
+class DankeWidget : GlanceAppWidget() {
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+        provideContent {
+            DankeWidgetContent()
+        }
+    }
+}
+
+@Composable
+fun DankeWidgetContent() {
+    val content = ContentRepository.getCurrentDayContent()
+    
+    GlanceTheme {
+        Column(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .background(Color(0xFF1A1A1A))
+                .padding(16.dp)
+        ) {
+            // Quote
+            Text(
+                text = content.quote,
+                style = TextStyle(
+                    fontSize = 15.sp,
+                    fontFamily = FontFamily.Serif,
+                    color = Color(0xFFE8DCC4)
+                ),
+                maxLines = 4
+            )
+            
+            Spacer(modifier = GlanceModifier.height(12.dp))
+            
+            // Action
+            Row {
+                Image(
+                    provider = ImageProvider(R.drawable.ic_checkbox_unchecked),
+                    contentDescription = "Checkbox"
+                )
+                Spacer(modifier = GlanceModifier.width(8.dp))
+                Text(
+                    text = content.action,
+                    style = TextStyle(fontSize = 13.sp, color = Color(0xFFF5F5F5)),
+                    maxLines = 3
+                )
+            }
+            
+            Spacer(modifier = GlanceModifier.defaultWeight())
+            
+            // Metadata
+            Row {
+                Text(
+                    text = content.domain.name,
+                    style = TextStyle(fontSize = 11.sp, color = Color(content.domain.color.toLong()))
+                )
+                Text(
+                    text = " • ${content.quoteSource}",
+                    style = TextStyle(fontSize = 11.sp, color = Color(0xFFA0A0A0))
+                )
+            }
+        }
+    }
+}
+```
+
+**Commit:**
+```bash
+git add android/app/src/main/java/widget/
+git commit -m "feat(android): implement Glance widget with dynamic content"
+git push
+```
+
+### 4.4 Build Companion App (Day 12-14)
+
+**Port iOS views to Jetpack Compose:**
+- TodayScreen.kt (mirrors TodayView.swift)
+- BrowseScreen.kt
+- SettingsScreen.kt
+
+**Use same logic, adapt to Compose syntax**
+
+**Commit:**
+```bash
+git add android/app/src/main/java/ui/
+git commit -m "feat(android): complete companion app with all tabs"
+git push
+```
+
+---
+
+## PHASE 5: CONTENT CURATION (52 WEEKS)
+
+**Estimated Time:** 2-3 weeks (can parallelize with development)  
+**Outcome:** 364 days of curated quotes/actions  
+**Agent:** Spawn `content/copywriting` specialist  
+
+### 5.1 Strategy
+
+**Option A: Manual Curation (Recommended for Quality)**
+- Read 10-15 Dan Koe articles per week
+- Extract 7 quote/action pairs per week
+- Review for coherence and progression
+
+**Option B: AI-Assisted Curation**
+```
+For each article:
+1. Fetch full text (with permission or public posts)
+2. Prompt AI: "Extract 1 quote + 1 action following schema"
+3. Human review and approve/edit
+4. Commit weekly batches
+```
+
+**Commit Pattern:**
+```bash
+git add content/content.json
+git commit -m "content: add Week 2 (Days 8-14)"
+git push
+```
+
+**By End of Phase 5:**
+```json
+content/content.json → 364 entries (full year)
+```
+
+---
+
+## PHASE 6: POLISH & TESTING
+
+**Estimated Time:** 1 week  
+**Outcome:** Production-ready apps  
+
+### 6.1 Security Scan (Day 15)
+
+**Run Vibeship Scanner:**
+```bash
+# Install scanner
+npm install -g @vibeship/scanner
+
+# Scan iOS project
+vibeship-scanner scan --path ios/ --output ios-security-report.json
+
+# Scan Android project
+vibeship-scanner scan --path android/ --output android-security-report.json
+```
+
+**Review reports, fix vulnerabilities:**
+```
+Common issues AI generates:
+- Hardcoded API keys (we don't have any, but check)
+- Insecure data storage (verify App Group/SharedPrefs usage)
+- Widget sandbox violations
+```
+
+**Commit fixes:**
+```bash
+git add ios/ android/
+git commit -m "security: resolve vulnerabilities from Vibeship scan"
+git push
+```
+
+### 6.2 Beta Testing (Day 16-20)
+
+**TestFlight (iOS):**
+```
+1. Xcode → Product → Archive
+2. Upload to App Store Connect
+3. Create TestFlight beta
+4. Invite 10-50 beta testers
+```
+
+**Google Play Open Testing (Android):**
+```
+1. Android Studio → Build → Generate Signed Bundle
+2. Upload to Google Play Console
+3. Create Open Testing track
+4. Share opt-in link
+```
+
+**Collect Feedback:**
+- Widget legibility issues?
+- Action clarity problems?
+- Crashes or bugs?
+
+**Iterate based on feedback**
+
+---
+
+## PHASE 7: LAUNCH
+
+**Estimated Time:** 1 week (app review wait time)  
+**Outcome:** Public release on App Store + Play Store  
+
+### 7.1 App Store Submission (iOS)
+
+**Assets:**
+- [ ] App icon (1024x1024)
+- [ ] Screenshots (iPhone 15 Pro: 5 images)
+- [ ] Widget previews (show on home/lock screen)
+- [ ] Privacy policy (required, even if no data collection)
+- [ ] App description (see below)
+
+**App Description:**
+```
+Danke! Daily Wisdom
+
+Start each day with philosophical insights and actionable micro-tasks inspired by Dan Koe's teachings on focus, purpose, and intentional living.
+
+Features:
+• Beautiful home screen widget with daily quotes
+• One focused action to complete each day
+• Organized by consciousness, health, wealth, and relationships
+• 100% privacy-first (no tracking, no accounts)
+• Minimalist design that respects your attention
+
+Perfect for:
+✓ Solopreneurs building one-person businesses
+✓ Anyone seeking deeper purpose and clarity
+✓ Self-improvement enthusiasts who value philosophy over generic motivation
+
+Danke! is an unofficial app inspired by Dan Koe's Substack writings. Not affiliated with or endorsed by Dan Koe.
+```
+
+**Submit for Review**
+- Typical wait: 24-48 hours
+
+### 7.2 Google Play Submission (Android)
+
+**Similar assets as iOS**
+
+**Submit for Review**
+- Typical wait: 1-3 days
+
+### 7.3 Launch Marketing
+
+**Day of Launch:**
+1. Post on X/Twitter (tag @thedankoe if appropriate)
+2. Share in Dan Koe's Discord/communities
+3. Product Hunt launch (optional)
+4. Reddit: r/productivity, r/SideProject
+
+**Messaging:**
+```
+I built Danke! - a daily wisdom widget based on Dan Koe's philosophy of focus and intentional living.
+
+Every morning, get:
+→ One philosophical quote
+→ One actionable micro-task (5-30 min)
+
+100% free, no accounts, privacy-first.
+
+iOS: [link]
+Android: [link]
+
+Feedback welcome!
+```
+
+---
+
+## ONGOING: MAINTENANCE & UPDATES
+
+### Monthly Content Updates
+
+**If Auto-Scraping Approved:**
+- Set up cron job to check Dan's RSS
+- AI extracts new quotes/actions
+- Human review + approval
+- Push update to GitHub → apps fetch new content
+
+**If Manual Curation:**
+- Monthly: Review latest 4 Dan Koe articles
+- Extract 4 new quote/action pairs
+- Update content.json
+- Release app update (quarterly batches)
+
+### Bug Fixes & Features
+
+**Monitor:**
+- App Store reviews
+- User emails
+- Twitter mentions
+
+**Iterate:**
+- V2 features (weekly synthesis, Apple Watch, etc.)
+- Community requests
+
+---
+
+## ROLLBACK STRATEGY (Meta's Principle)
+
+**If a feature fails:**
+```bash
+# Find commit before feature was added
+git log --oneline
+
+# Example: Remove broken "streak tracker" feature
+git checkout abc123  # Commit before streak
+git checkout -b main-without-streak
+# Continue from here
+
+# Don't try to patch broken code, rebuild cleanly
+```
+
+---
+
+## SUCCESS CHECKPOINTS
+
+**Phase 1 Complete:** ✓ Hardcoded iOS widget works  
+**Phase 2 Complete:** ✓ Dynamic content loads from JSON  
+**Phase 3 Complete:** ✓ Minimal app with 3 tabs functional  
+**Phase 4 Complete:** ✓ Android widget + app at parity  
+**Phase 5 Complete:** ✓ 364 days of content curated  
+**Phase 6 Complete:** ✓ Security scanned, beta tested  
+**Phase 7 Complete:** ✓ Live on App Store + Play Store  
+
+---
+
+## ESTIMATED TOTAL TIMELINE
+
+**Aggressive (Full-Time):** 4-6 weeks  
+**Realistic (Part-Time):** 8-12 weeks  
+**Conservative (Weekends):** 12-16 weeks  
+
+**Critical Path:**
+- iOS MVP (Week 1-2)
+- Content curation (parallel, Week 1-4)
+- Android port (Week 3-4)
+- Polish + launch (Week 5-6)
+
+---
+
+## VIBECODING SESSION WORKFLOW
+
+### Daily Coding Session Structure
+
+**Meta's Mobile Workflow Applied:**
+
+**Session Start (5 min):**
+```bash
+# Pull latest changes
+git pull
+
+# Review current sprint
+cat FEATURES.md
+
+# Choose ONE vertical slice to complete today
+# Example: "Today I will complete the iOS widget TimelineProvider"
+```
+
+**Active Coding (30-90 min):**
+```
+1. Spawn appropriate specialist skill
+   Example: "Spawn mobile/ios-widgets specialist"
+
+2. Describe ONLY the current slice
+   Don't explain entire project - just this piece
+
+3. Let AI generate code
+
+4. Test immediately (run in simulator)
+
+5. If works → commit
+   If broken → ask AI to fix, or rollback
+
+6. Commit frequently (every 15-30 min of working code)
+```
+
+**Session End (5 min):**
+```bash
+# Commit final state
+git add .
+git commit -m "feat: complete iOS TimelineProvider with midnight refresh"
+git push
+
+# Update docs
+# Add to CHANGELOG.md
+# Update FEATURES.md checklist
+
+# Note what's next for tomorrow
+echo "Tomorrow: Build Today tab UI" > .next-session
+```
+
+**Meta's Rule:** "Never end a session with broken code committed"
+
+---
+
+## AUTO-UPDATE IMPLEMENTATION (Your Question)
+
+### Option 1: RSS Monitoring (Safe, Manual Approval)
+
+**Architecture:**
+```
+Dan posts new article
+  ↓
+RSS feed updates (public posts only)
+  ↓
+Your server checks RSS daily (cron job)
+  ↓
+AI analyzes new article
+  ↓
+Suggests quote + action
+  ↓
+You review via email/dashboard
+  ↓
+Approve → auto-commits to content.json
+  ↓
+Apps fetch updated content (weekly check)
+```
+
+**Implementation (Simple):**
+```python
+# rss_monitor.py (runs on free Render.com or Railway)
+import feedparser
+import anthropic
+
+DAN_RSS = "https://letters.thedankoe.com/feed"
+
+def check_for_new_posts():
+    feed = feedparser.parse(DAN_RSS)
+    latest = feed.entries[0]
+    
+    # Check if we've processed this article
+    if already_processed(latest.link):
+        return
+    
+    # AI analysis
+    client = anthropic.Anthropic()
+    response = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        messages=[{
+            "role": "user",
+            "content": f"""
+            Article: {latest.title}
+            Content: {latest.summary}
+            
+            Extract:
+            1. One quote (15-50 words, philosophically dense)
+            2. One action (specific, timeboxed micro-task)
+            
+            Follow this schema: {SCHEMA}
+            Domain: Choose from consciousness/health/wealth/relationships
+            """
+        }]
+    )
+    
+    # Send to your email for approval
+    send_for_approval(latest.title, response.content)
+```
+
+**Weekly Content Fetch (in Apps):**
+```swift
+// iOS: ContentService.swift
+func checkForUpdates() async {
+    let remoteURL = "https://raw.githubusercontent.com/yourusername/danke-content/main/content.json"
+    
+    // Fetch remote version
+    guard let data = try? await URLSession.shared.data(from: URL(string: remoteURL)!).0 else {
+        return // Use bundled content
+    }
+    
+    // Parse and cache locally
+    let remoteContent = try? JSONDecoder().decode([DailyContent].self, from: data)
+    
+    // Update local cache
+    UserDefaults.standard.set(data, forKey: "cachedContent")
+    
+    // Update widget
+    WidgetCenter.shared.reloadAllTimelines()
+}
+```
+
+**Privacy Consideration:**
+- No tracking which users fetch updates
+- Just a simple GET request to GitHub
+- GitHub doesn't expose who downloaded a file
+
+---
+
+### Option 2: Partnership with Dan (Best Long-Term)
+
+**Pitch to Dan:**
+```
+Subject: Danke! - Unofficial Widget App for Your Philosophy
+
+Hi Dan,
+
+I built a daily widget app called "Danke!" that delivers bite-sized wisdom and actionable micro-tasks based on your Substack writings.
+
+Current state:
+• 1000+ TestFlight users (launched 2 weeks ago)
+• 4.9 star rating
+• Users reporting habit formation breakthroughs
+• 100% free, no ads, privacy-first
+
+I'd love to:
+1. Get your blessing for the project
+2. Discuss official partnership (optional premium tier for your subscribers)
+3. Set up automated content pipeline (you approve quotes monthly)
+
+Early feedback: "This is the only widget I actually use daily" - @username
+
+Would you be open to a quick call?
+
+Best,
+[Your Name]
+[App Store Link]
+```
+
+**If He Says Yes:**
+- Official branding ("Approved by Dan Koe")
+- Access to full article archive
+- Premium tier: Subscriber-only content
+- Revenue share (if applicable)
+
+---
+
+## DISTRIBUTION: WIDGET VS APP (Your Question Answered)
+
+**Clarification: You asked "app or extension or widget, which works?"**
+
+**Answer: It's a WIDGET inside an APP**
+
+**What Users Download:**
+- iOS: "Danke!" app from App Store
+- Android: "Danke!" app from Play Store
+
+**What They Actually Use:**
+- Primary: Home screen widget (add via widget gallery)
+- Secondary: Lock screen widget (iOS 16+)
+- Tertiary: App interior (for browsing, settings)
+
+**Why Not Browser Extension:**
+```
+❌ Chrome/Safari extension can't do:
+   - Home screen widgets
+   - Lock screen widgets
+   - Offline access (always-on visibility)
+   - Deep OS integration (midnight refresh, notifications)
+
+✅ Native mobile app can do all of the above
+```
+
+**Mental Model:**
+```
+User Journey:
+1. Downloads "Danke!" from App Store
+2. Opens app once (onboarding)
+3. Adds widget to home screen (this is the main product)
+4. Widget shows quote + action daily
+5. Rarely opens app again (unless browsing content)
+```
+
+**Widget is the Product, App is the Container**
+
+---
+
+## DESIGN CONFIRMATION (Your Question)
+
+**You asked: "Can you handle the designs?"**
+
+**Yes - Here's What I'll Do:**
+
+### Design Deliverables I'll Create:
+
+**1. High-Fidelity Widget Mockup**
+```
+I'll generate:
+- iOS Small widget (2x2) in all states
+- Lock screen widget variant
+- Android 4x2 widget
+- Dark mode (primary) + Light mode (optional)
+
+Format: Figma-style specs in markdown + example SwiftUI code
+```
+
+**2. App Screen Designs**
+```
+- Onboarding flow (3 screens max)
+- Today tab
+- Browse tab (calendar grid)
+- Settings tab
+- All with exact spacing, colors, typography
+```
+
+**3. App Icon Design**
+```
+Concept: Stylized "D!" mark
+- Minimalist geometric sans
+- Warm cream (#E8DCC4) on dark (#0A0A0A)
+- No gradients, no shadows (brutalist aesthetic)
+- Exports: 1024x1024 source + all iOS/Android sizes
+```
+
+**4. Component Library**
+```
+Reusable UI components documented:
+- Domain tag badges
+- Checkboxes (checked/unchecked states)
+- Action cards
+- Quote cards
+- Buttons
+```
+
+**When to Create:**
+- Now: I can generate detailed mockups in next response
+- Later: During Phase 1 (alongside iOS coding)
+
+**Your Call:** Want me to design the app icon and full widget mockup now, or wait until we start coding?
+
+---
+
+## IMMEDIATE NEXT STEPS
+
+Based on your answers, here's what happens NOW:
+
+### Step 1: You Set Up GitHub (10 min)
+```bash
+# Create repo
+gh repo create danke-app --public
+
+# Or via GitHub web:
+# github.com → New Repository → "danke-app"
+
+# Clone locally
+git clone https://github.com/yourusername/danke-app
+cd danke-app
+
+# Add planning docs
+mkdir docs
+# (I'll give you downloadable .md files)
+```
+
+### Step 2: I Generate Starter Content (Now)
+
+**Want me to:**
+1. Create first 7 days of Dan Koe-inspired quotes/actions?
+2. Generate content.json in proper schema?
+3. Design app icon mockup?
+4. Create detailed widget visual spec?
+
+**Just tell me which to start with, and I'll create artifacts you can copy directly into your repo**
+
+### Step 3: Install Vibecoding Tools (15 min)
+```bash
+# Install Spawner Skills (desktop)
+npx github:vibeforge1111/vibeship-spawner-skills install --mcp
+
+# Verify
+npx vibeship-spawner-skills list
+```
+
+### Step 4: First Coding Session (Tomorrow or Next)
+
+**We'll build Phase 1 together:**
+- I'll be your iOS widget specialist
+- You'll copy/paste code into Xcode
+- We'll commit every working piece
+- By end of session: Working hardcoded widget
+
+---
+
+## FINAL DECISION POINTS FOR YOU
+
+Answer these so I can proceed:
+
+**1. Content Curation Approach:**
+- [ ] You want me to generate 7 days of content NOW (to start testing)
+- [ ] You want me to generate all 52 weeks (takes longer, but complete)
+- [ ] You'll manually curate from Dan's Substack yourself
+
+**2. Design Deliverables Priority:**
+- [ ] App icon design (I create now)
+- [ ] Widget mockup with all visual specs (I create now)
+- [ ] Both (I create now)
+- [ ] Neither yet (design during Phase 1 coding)
+
+**3. Platform Build Order:**
+- [ ] iOS first (then Android in 3-4 weeks)
+- [ ] iOS and Android simultaneously (slower, but both ready together)
+
+**4. Legal/Ethical Path:**
+- [ ] Launch as "Unofficial, inspired by Dan Koe" (with disclaimer)
+- [ ] Wait for Dan's approval before launching
+- [ ] Don't mention Dan specifically, just "focused on consciousness & purpose"
+
+**5. Auto-Update Strategy:**
+- [ ] Manual curation only (you/AI curate weekly)
+- [ ] RSS monitor with your approval (I build Python script)
+- [ ] No auto-updates (quarterly app releases with new content)
+
+---
+
+## WHAT I NEED FROM YOU RIGHT NOW
+
+**To proceed with vibecoding:**
+
+1. **GitHub username** (so I can reference correct URLs in code)
+2. **Choose 1-2 items from Decision Points above** (at minimum)
+3. **Confirm:** You're ready to start Phase 0 (GitHub setup + content prep)
+
+**Then I'll generate:**
+- ✅ Initial content.json (7 days to start)
+- ✅ README.md for your repo
+- ✅ .gitignore files
+- ✅ First commit message templates
+
+**And we'll be ready to vibecode the iOS widget tomorrow** 🚀
+
+What do you want me to create first?

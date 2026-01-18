@@ -1,0 +1,211 @@
+# Danke! .gitignore
+
+# ==========================================
+# iOS / Xcode
+# ==========================================
+
+# Build artifacts
+ios/Build/
+ios/DerivedData/
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+ios/.swiftpm/
+ios/Packages/
+ios/*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# CocoaPods (if used later)
+ios/Pods/
+ios/*.xcworkspace
+
+# Carthage (if used)
+ios/Carthage/
+
+# Accidental Keychain commits
+*.keychain
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# ==========================================
+# Android / Gradle
+# ==========================================
+
+# Built application files
+*.apk
+*.aab
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+android/bin/
+android/gen/
+android/out/
+android/release/
+
+# Gradle files
+android/.gradle/
+android/build/
+android/local.properties
+
+# Android Studio
+android/*.iml
+android/.idea/
+android/.externalNativeBuild
+android/.cxx/
+android/captures/
+android/app/google-services.json
+
+# Keystore files (NEVER commit these!)
+*.jks
+*.keystore
+
+# ==========================================
+# Content / Data
+# ==========================================
+
+# Archive old content versions
+content/archive/
+
+# Temporary content drafts
+content/*.draft.json
+content/*.tmp.json
+
+# User data (should never exist in repo, but just in case)
+content/user-data/
+
+# ==========================================
+# Documentation
+# ==========================================
+
+# Compiled docs
+docs/_site/
+docs/.jekyll-cache/
+
+# Local notes (not for repo)
+*.local.md
+.notes/
+
+# ==========================================
+# Development Tools
+# ==========================================
+
+# Vibeship Scanner reports
+*-security-report.json
+vibeship-scanner-output/
+
+# Node modules (if using any tooling)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python virtual environments (if using RSS monitor)
+venv/
+env/
+*.pyc
+__pycache__/
+
+# ==========================================
+# Secrets & Environment Variables
+# ==========================================
+
+# CRITICAL: Never commit these!
+.env
+.env.local
+.env.production
+secrets.json
+api-keys.json
+
+# Firebase (if added later)
+ios/GoogleService-Info.plist
+android/app/google-services.json
+
+# Supabase (if added)
+.supabase/
+
+# ==========================================
+# Testing & CI/CD
+# ==========================================
+
+# Test coverage reports
+coverage/
+*.lcov
+
+# Fastlane (iOS deployment automation)
+ios/fastlane/report.xml
+ios/fastlane/Preview.html
+ios/fastlane/screenshots/
+ios/fastlane/test_output/
+
+# ==========================================
+# Logs
+# ==========================================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================================
+# Editor / IDE
+# ==========================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Cursor
+.cursor/
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
+# Temporary Files
+# ==========================================
+
+*.tmp
+*.temp
+.next-session
+
+# ==========================================
+# Platform-Specific
+# ==========================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+.directory
+
+# ==========================================
+# Personal
+# ==========================================
+
+# Add your own personal patterns here
+# Example: personal-notes/

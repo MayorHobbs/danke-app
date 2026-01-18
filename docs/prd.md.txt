@@ -1,0 +1,264 @@
+# Danke! - Product Requirements Document (PRD)
+
+**Version:** 1.0  
+**Last Updated:** January 18, 2026  
+**Status:** Pre-Development  
+
+---
+
+## 1. PRODUCT VISION
+
+**Name:** Danke! (Dan + Thank you)
+
+**Tagline:** *"Daily wisdom for conscious living"*
+
+**Mission Statement:**  
+Danke! is a mobile widget that delivers daily philosophical reminders and actionable micro-tasks based on Dan Koe's writings on consciousness, purposeful living, and holistic self-improvement. It helps users build better habits through consistent, bite-sized wisdom anchored in focus, health, wealth, and relationships.
+
+**Target Outcome:**  
+Users check their home/lock screen daily and complete one meaningful action that compounds over time into transformative habit patterns.
+
+---
+
+## 2. TARGET AUDIENCE
+
+### Primary Users
+- **Dan Koe followers** (234k+ Substack subscribers)
+- **Solopreneurs & creators** building one-person businesses
+- **Self-improvement enthusiasts** seeking philosophical depth over generic motivation
+- **Ages 25-45**, digitally native, values-driven
+
+### User Personas
+
+**Persona 1: "The Scattered Creator"**
+- Has big goals but struggles with daily focus
+- Reads Dan's newsletters but doesn't implement advice
+- Needs: Daily actionable reminders, habit scaffolding
+
+**Persona 2: "The Intentional Builder"**  
+- Already journaling/meditating, wants next-level growth
+- Seeks deeper philosophical frameworks
+- Needs: Thought-provoking prompts, consciousness expansion
+
+**Persona 3: "The Curious Newcomer"**
+- New to Dan Koe, attracted to holistic self-improvement
+- Overwhelmed by information, needs simplicity
+- Needs: Digestible daily doses, low commitment entry point
+
+---
+
+## 3. CORE FEATURES
+
+### 3.1 Daily Widget (MVP)
+
+**Home Screen Widget (iOS + Android)**
+- Displays 2 elements daily:
+  1. **Quote:** Philosophical anchor (15-50 words from Dan's writings)
+  2. **Action:** Specific, timeboxed micro-task (5-30 minutes)
+- Auto-refreshes at midnight (user's local timezone)
+- Tapping widget opens companion app for context
+
+**Lock Screen Widget (iOS 16+, Android 14+)**
+- Minimal version: Quote only (space constraints)
+- Optional: Just action checkbox
+
+### 3.2 Content System
+
+**Database Structure:**
+- 52 weeks of curated quote/action pairs (364 days)
+- Categorized by Dan's "Big 3" domains:
+  - 🧠 **Consciousness** (philosophy, awareness, belief systems)
+  - 💪 **Health** (exercise, nutrition, energy management)
+  - 💰 **Wealth** (business, skills, value creation)
+  - ❤️ **Relationships** (communication, connection, boundaries)
+
+**Content Rotation Logic:**
+- Sequential by default (Day 1 → Day 364, then loops)
+- Optional: User selects domain focus (e.g., "prioritize Wealth actions")
+
+**Content Format:**
+```json
+{
+  "day": 1,
+  "quote": "Focus is the ability to say no to everything except the one thing that matters most.",
+  "quote_source": "The Art of Focus",
+  "action": "Write down 3 things you're saying yes to that don't align with your goals. Cross one out.",
+  "action_duration": "10 min",
+  "domain": "consciousness",
+  "difficulty": "beginner"
+}
+```
+
+### 3.3 Companion App (Minimal)
+
+**Purpose:** Widget configuration + content browsing (not the main experience)
+
+**Screens:**
+1. **Onboarding** (first launch)
+   - "What area needs most focus?" (Consciousness/Health/Wealth/Relationships)
+   - Sets content rotation preference
+   
+2. **Today Tab** (default)
+   - Shows current quote + action (same as widget)
+   - "Mark as Complete" checkbox
+   - Optional reflection: "What did you learn?" (text input)
+
+3. **Browse Tab**
+   - Calendar view of all 364 days
+   - Filter by domain
+   - Tap any day to read quote/action
+
+4. **Settings**
+   - Widget refresh time preference
+   - Domain priority slider
+   - Notification preferences (optional evening reminder)
+
+### 3.4 Evening Reflection (Optional Feature)
+
+**Trigger:** 8 PM local time (configurable)
+
+**Notification:**  
+"Did you complete today's action?"
+
+**If Yes:**  
+→ "What did you learn?" (1-2 sentence text input)  
+→ Saved to local journal (privacy-first)
+
+**If No:**  
+→ "What got in the way?" (awareness-building, no shame)
+
+---
+
+## 4. NON-FEATURES (Explicitly Excluded)
+
+### What Danke! Will NOT Do
+
+❌ **Gamification:**  
+- No streaks, points, badges, leaderboards
+- Reason: Dan's philosophy rejects external validation
+
+❌ **Social Sharing:**  
+- No "Share to Instagram" buttons
+- Reason: This is private, personal, reflective work
+
+❌ **Push Notifications for Quotes:**  
+- Widget is pull-based (user checks when ready)
+- Exception: Optional evening reflection reminder only
+
+❌ **Generic Motivational Content:**  
+- No "You got this!" energy
+- Every quote must connect to Dan's frameworks
+
+❌ **Overwhelming Action Lists:**  
+- One action per day maximum
+- Depth over breadth (Dan's core principle)
+
+❌ **Paid Tier Initially:**  
+- Launch 100% free
+- Future: Optional "Premium Insights" if partnered with Dan
+
+---
+
+## 5. SUCCESS METRICS
+
+### North Star Metric
+**Daily Active Widget Views**  
+(User sees widget on home/lock screen)
+
+### Supporting Metrics
+- **Engagement:** % of users who complete daily action (tracked via app checkbox)
+- **Retention:** 7-day, 30-day, 90-day retention rates
+- **Depth:** Average reflection word count (indicates thoughtful engagement)
+- **Completion Rate:** Actions marked complete / total days
+
+### Qualitative Success
+- User testimonials: "This changed my daily routine"
+- App Store reviews mentioning habit formation
+- Requests from Dan Koe's community for official partnership
+
+---
+
+## 6. TECHNICAL CONSTRAINTS
+
+### Platform Requirements
+- **iOS:** 16.0+ (for Lock Screen widgets)
+- **Android:** 12+ (API 31, Android 14+ for lock screen)
+
+### Performance
+- Widget update: < 2 seconds
+- App cold start: < 1 second
+- JSON fetch: < 500ms (cached for offline)
+
+### Privacy
+- **No user accounts initially** (local-first)
+- **No tracking/analytics** in MVP (respects privacy)
+- All reflections stored locally (device only)
+
+### Legal
+- **Disclaimer:** "Inspired by Dan Koe's philosophy (unofficial app)"
+- **Attribution:** Clear credit to Dan Koe's Substack
+- **Copyright:** Original synthesis of ideas, not direct copying
+
+---
+
+## 7. GO-TO-MARKET STRATEGY
+
+### Phase 1: Beta (Week 1-4)
+- TestFlight (iOS) + Google Play Open Testing (Android)
+- Share in Dan Koe's Twitter/Discord communities
+- Goal: 100 beta users, qualitative feedback
+
+### Phase 2: Launch (Week 5-8)
+- App Store + Google Play public release
+- Product Hunt launch
+- Outreach to Dan Koe for acknowledgment/partnership
+
+### Phase 3: Growth (Month 3+)
+- User-generated testimonials
+- Content updates (weekly new quotes if auto-scraping works)
+- Consider: Official partnership for "Danke! Premium" with exclusive content
+
+---
+
+## 8. FUTURE ROADMAP (Post-MVP)
+
+### V2 Features (Month 3-6)
+- **Weekly Synthesis:** "This week you focused on: 3 Wealth, 2 Health actions"
+- **Custom Schedules:** Choose which days to show which domains
+- **Audio Quotes:** Dan's voice reading quotes (if partnered)
+
+### V3 Features (Month 6-12)
+- **Apple Watch Complication:** Quote of the day on watch face
+- **Siri Shortcuts:** "Hey Siri, what's today's Danke action?"
+- **Auto-Content Updates:** Scrape new Dan Koe posts (with permission)
+
+### V4 Features (Year 2+)
+- **Community Mode:** Share reflections anonymously with other users
+- **Accountability Pods:** 3-5 users in small groups checking in
+- **Dan Koe Official Integration:** Exclusive subscriber-only content
+
+---
+
+## 9. OPEN QUESTIONS
+
+1. **Content Licensing:** Can we get Dan Koe's blessing for direct quote usage?
+2. **Auto-Updates:** Manual curation vs automated scraping (legal?)
+3. **Monetization:** Keep 100% free or freemium model?
+4. **Platform Priority:** Ship iOS first, or simultaneous launch?
+
+---
+
+## 10. APPROVAL CHECKLIST
+
+Before moving to development:
+
+- [ ] Content curation: 52 weeks of quotes/actions prepared
+- [ ] Legal review: Disclaimer text approved
+- [ ] Design system: Visual identity finalized
+- [ ] Tech stack: Architecture document reviewed
+- [ ] GitHub repo: Set up with proper .gitignore
+- [ ] Vibeship Spawner Skills: Installed for specialized agents
+
+---
+
+**Next Document:** `architecture.md` (Technical Architecture & Stack Decisions)

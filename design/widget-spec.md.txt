@@ -1,0 +1,488 @@
+# Danke! Widget - Complete Visual Specification
+
+**Version:** 1.0  
+**Platform:** iOS Small Widget (2x2 grid cells)  
+**Size:** 158x158pt (@3x: 474x474px)  
+**Target:** iPhone home screen widget  
+
+---
+
+## FULL WIDGET MOCKUP
+
+### Default State (Day 1 Content)
+
+```
+┌────────────────────────────────────────────────┐
+│  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓  │
+│  ┃                                          ┃  │ ← 16pt padding all sides
+│  ┃  "Focus is the ability to say no to     ┃  │
+│  ┃  everything except what matters most.   ┃  │ ← Quote: Georgia 15pt
+│  ┃  Your attention is the most valuable    ┃  │   Color: #E8DCC4
+│  ┃  resource you possess."                 ┃  │   Line height: 1.4
+│  ┃                                          ┃  │   Max 4 lines
+│  ┃                                          ┃  │
+│  ┃  ┌──────────────────────────────────┐   ┃  │ ← 12pt spacing
+│  ┃  │ □  Write down 3 things you're    │   ┃  │
+│  ┃  │    saying yes to that don't      │   ┃  │ ← Action: SF Pro 13pt
+│  ┃  │    align with your goals.        │   ┃  │   Color: #F5F5F5
+│  ┃  │    Cross one out. (10 min)       │   ┃  │   Checkbox: 20pt
+│  ┃  └──────────────────────────────────┘   ┃  │
+│  ┃                                          ┃  │
+│  ┃  [Consciousness] • The Art of Focus     ┃  │ ← Metadata: 11pt
+│  ┃                                          ┃  │   Color: #A0A0A0
+│  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛  │
+└────────────────────────────────────────────────┘
+
+Background: #1A1A1A (elevated surface)
+Outer padding: 16pt
+Corner radius: System default (iOS ~25pt for small widget)
+```
+
+---
+
+## EXACT MEASUREMENTS
+
+### Widget Canvas
+```
+Total size: 158x158pt (at @1x scale)
+Safe area: 126x126pt (after 16pt padding all sides)
+Corner radius: ~25pt (matches iOS system widgets)
+```
+
+### Layout Grid
+
+```
+Vertical Stack (VStack):
+├── Quote Section
+│   ├── Top padding: 0pt (flush with safe area)
+│   ├── Quote text: Dynamic height (min 60pt, max 80pt)
+│   └── Bottom spacing: 12pt
+│
+├── Action Section  
+│   ├── Top: 12pt from quote
+│   ├── HStack: Checkbox + Action text
+│   │   ├── Checkbox: 20x20pt
+│   │   ├── Spacing: 8pt
+│   │   └── Action text: Flexible width
+│   ├── Action height: Dynamic (min 50pt, max 70pt)
+│   └── Bottom spacing: Auto (Spacer)
+│
+└── Metadata Section
+    ├── Top: Auto (pushed to bottom via Spacer)
+    ├── HStack: Domain tag + Source text
+    │   ├── Domain tag: Dynamic width (60-100pt)
+    │   ├── Separator: " • " (bullet)
+    │   └── Source: Truncated to fit
+    └── Bottom padding: 0pt (flush with safe area)
+```
+
+### Precise Typography
+
+**Quote Text:**
+```
+Font: Georgia (system serif)
+Size: 15pt
+Weight: Regular (400)
+Color: #E8DCC4 (RGB: 232, 220, 196)
+Line height: 21pt (1.4 ratio)
+Letter spacing: 0pt (default)
+Max lines: 4
+Truncation: "..." at end of line 4
+Alignment: Left
+```
+
+**Action Text:**
+```
+Font: SF Pro (system sans)
+Size: 13pt
+Weight: Medium (500)
+Color: #F5F5F5 (RGB: 245, 245, 245)
+Line height: 17pt (1.3 ratio)
+Letter spacing: -0.08pt (slight tightening for readability)
+Max lines: 3
+Truncation: "..." at end of line 3
+Alignment: Left
+```
+
+**Metadata (Domain Tag):**
+```
+Font: SF Pro
+Size: 11pt
+Weight: Medium (500)
+Color: Domain-specific (see below)
+Background: Domain color @ 50% opacity
+Padding: 6pt horizontal, 3pt vertical
+Corner radius: 4pt
+Border: 1pt solid (same as text color)
+```
+
+**Metadata (Source Text):**
+```
+Font: SF Pro
+Size: 11pt
+Weight: Regular (400)
+Color: #A0A0A0 (RGB: 160, 160, 160)
+Truncation: Fade to transparency (iOS native)
+```
+
+---
+
+## COLOR SPECIFICATIONS
+
+### Background Layers
+```
+Widget background: #1A1A1A (RGB: 26, 26, 26)
+  ├── On dark wallpaper: Visible, subtle elevation
+  └── On light wallpaper: Strong contrast
+
+Alternative (blur effect):
+  ContainerBackground (iOS 17+)
+  └── Adapts to wallpaper with subtle blur
+```
+
+### Text Colors (All in sRGB color space)
+```
+Quote:    #E8DCC4 = rgb(232, 220, 196)
+Action:   #F5F5F5 = rgb(245, 245, 245)
+Metadata: #A0A0A0 = rgb(160, 160, 160)
+```
+
+### Domain Tag Colors
+```
+Consciousness:
+  Text/Border: #8B7FB8 (RGB: 139, 127, 184) - purple
+  Background:  #8B7FB880 (50% opacity)
+
+Health:
+  Text/Border: #7FA66A (RGB: 127, 166, 106) - sage green
+  Background:  #7FA66A80 (50% opacity)
+
+Wealth:
+  Text/Border: #C9A961 (RGB: 201, 169, 97) - muted gold
+  Background:  #C9A961A0 (50% opacity)
+
+Relationships:
+  Text/Border: #B87F8F (RGB: 184, 127, 143) - rose
+  Background:  #B87F8F80 (50% opacity)
+```
+
+### Checkbox States
+```
+Unchecked:
+  Shape: 20x20pt square
+  Border: 2pt solid #F5F5F5
+  Corner radius: 4pt
+  Fill: Transparent
+  
+Checked:
+  Shape: 20x20pt square
+  Border: 2pt solid #7FA66A (success green)
+  Corner radius: 4pt
+  Fill: #7FA66A
+  Checkmark: White SF Symbol "checkmark" @ 14pt
+```
+
+---
+
+## INTERACTION STATES
+
+### Tap Feedback (Entire Widget)
+```
+Normal state:
+  Scale: 1.0
+  Opacity: 1.0
+
+On tap down:
+  Scale: 0.95 (subtle shrink)
+  Opacity: 0.9
+  Duration: 0.1s ease-out
+
+On tap up:
+  Scale: 1.0 (spring back)
+  Opacity: 1.0
+  Duration: 0.2s spring (damping: 0.7)
+  
+On tap complete:
+  → Opens main app to Today tab
+```
+
+**Note:** In WidgetKit, tapping anywhere opens app. We simulate visual feedback with WidgetURL modifier.
+
+---
+
+## SWIFTUI IMPLEMENTATION REFERENCE
+
+```swift
+struct DankeWidgetView: View {
+    var entry: DailyContent
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Quote section
+            Text(entry.quote)
+                .font(.custom("Georgia", size: 15))
+                .foregroundColor(Color(hex: "#E8DCC4"))
+                .lineLimit(4)
+                .lineSpacing(6) // 21pt line height - 15pt = 6pt
+            
+            Spacer(minLength: 12)
+            
+            // Action section
+            HStack(alignment: .top, spacing: 8) {
+                Image(systemName: "square")
+                    .font(.system(size: 20))
+                    .foregroundColor(Color(hex: "#F5F5F5"))
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(entry.action)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(Color(hex: "#F5F5F5"))
+                        .lineLimit(3)
+                    
+                    Text("(\(entry.actionDuration))")
+                        .font(.system(size: 11))
+                        .foregroundColor(Color(hex: "#A0A0A0"))
+                }
+            }
+            
+            Spacer() // Pushes metadata to bottom
+            
+            // Metadata section
+            HStack(spacing: 4) {
+                // Domain tag
+                Text(entry.domain.rawValue.capitalized)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(Color(hex: entry.domain.color))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(
+                        Color(hex: entry.domain.color)
+                            .opacity(0.3)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4)
+                            .stroke(Color(hex: entry.domain.color), lineWidth: 1)
+                    )
+                    .cornerRadius(4)
+                
+                Text("•")
+                    .foregroundColor(Color(hex: "#A0A0A0"))
+                
+                Text(entry.quoteSource)
+                    .font(.system(size: 11))
+                    .foregroundColor(Color(hex: "#A0A0A0"))
+                    .lineLimit(1)
+            }
+        }
+        .padding(16)
+        .background(Color(hex: "#1A1A1A"))
+        .widgetURL(URL(string: "danke://today"))
+    }
+}
+
+// Helper for hex colors
+extension Color {
+    init(hex: String) {
+        let scanner = Scanner(string: hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
+        var hexNumber: UInt64 = 0
+        scanner.scanHexInt64(&hexNumber)
+        
+        let r = Double((hexNumber & 0xff0000) >> 16) / 255
+        let g = Double((hexNumber & 0x00ff00) >> 8) / 255
+        let b = Double(hexNumber & 0x0000ff) / 255
+        
+        self.init(red: r, green: g, blue: b)
+    }
+}
+```
+
+---
+
+## RESPONSIVE BEHAVIOR
+
+### Text Overflow Handling
+
+**Quote (4 line limit):**
+```
+Characters fit: ~160 (including spaces)
+If quote > 160 chars:
+  ├── Line 4 truncates with "..."
+  └── User taps widget → reads full quote in app
+```
+
+**Action (3 line limit):**
+```
+Characters fit: ~120 (including spaces)
+If action > 120 chars:
+  ├── Line 3 truncates with "..."
+  └── Duration appended on new line if space
+```
+
+**Source (1 line limit):**
+```
+If source > 20 chars:
+  ├── iOS native fade-to-transparency
+  └── Example: "The Art of Focus" → "The Art of Fo..."
+```
+
+### Dynamic Spacing
+
+```
+Minimum heights:
+├── Quote: 60pt (3 lines @ 20pt each)
+├── Action: 40pt (2 lines @ 20pt each)
+└── Metadata: 20pt (1 line)
+
+Total minimum: 120pt
+Remaining: 6pt distributed as Spacer() between sections
+
+Maximum heights:
+├── Quote: 84pt (4 lines @ 21pt each)
+├── Action: 60pt (3 lines @ 20pt each)
+└── Metadata: 20pt (1 line)
+
+If content is short, Spacer() expands to fill
+```
+
+---
+
+## ALTERNATE STATES (Future)
+
+### Action Completed State
+```
+Checkbox: Filled with checkmark (✓)
+Action text: Strikethrough + 60% opacity
+Duration: Faded out
+Visual feedback: Subtle green glow around checkbox
+```
+
+### Lock Screen Widget (iOS 16+)
+```
+Rectangular variant:
+├── Quote only (action removed due to space)
+├── 2 lines max
+├── SF Pro font (Georgia not supported)
+├── Monochrome (system color adaptation)
+└── Tap opens app to Today tab
+```
+
+---
+
+## ACCESSIBILITY FEATURES
+
+### VoiceOver Labels
+```
+Widget accessibility label:
+"Danke daily wisdom. Quote: [quote text]. 
+ Action: [action text]. 
+ From [source]. Estimated time: [duration]. 
+ Double tap to open app."
+
+Checkbox accessibility:
+"Mark action as complete. Currently unchecked."
+```
+
+### Dynamic Type Support
+```
+If user enables Accessibility > Larger Text:
+├── Quote: Scales from 15pt → 19pt (max)
+├── Action: Scales from 13pt → 17pt (max)
+├── Layout: Adjusts spacing dynamically
+└── Truncation: May occur earlier at larger sizes
+```
+
+### Reduce Motion
+```
+If user enables Reduce Motion:
+├── Tap feedback: Instant scale (no animation)
+├── Midnight refresh: Cross-fade (no slide)
+└── All spring animations: Linear fade
+```
+
+### High Contrast Mode
+```
+If user enables Increase Contrast:
+├── Quote: #FFFFFF (pure white)
+├── Action: #FFFFFF
+├── Background: #000000 (pure black)
+├── Domain tags: Brighter variants (+20% saturation)
+└── Borders: 2pt instead of 1pt (stronger definition)
+```
+
+---
+
+## DESIGN TESTING CHECKLIST
+
+Before finalizing:
+
+**Visual:**
+- [ ] Readable on dark wallpaper (black, navy, dark photo)
+- [ ] Readable on light wallpaper (white, cream, bright photo)
+- [ ] Legible at arm's length (60cm from face)
+- [ ] Quote truncates gracefully at 4 lines
+- [ ] Action truncates gracefully at 3 lines
+- [ ] Domain tag colors distinguishable
+
+**Interactive:**
+- [ ] Tap feedback feels responsive (not laggy)
+- [ ] Opens app to correct screen
+- [ ] Widget refreshes at midnight (test via device time)
+- [ ] No visual glitches during refresh
+
+**Accessibility:**
+- [ ] VoiceOver reads content logically
+- [ ] Dynamic Type doesn't break layout
+- [ ] High Contrast mode maintains readability
+- [ ] Color blind simulation: All domains distinguishable
+
+**Edge Cases:**
+- [ ] Very short quote (20 characters)
+- [ ] Maximum quote (160 characters, 4 lines)
+- [ ] Very short action (30 characters)
+- [ ] Maximum action (120 characters, 3 lines)
+- [ ] Long source name (truncates properly)
+
+---
+
+## EXPORT ASSETS
+
+### Design Files to Create
+
+```
+design/widget-mockups/
+├── widget-default-state.png      (474x474px @3x, Day 1 content)
+├── widget-all-domains.png        (4 widgets showing each domain)
+├── widget-on-wallpapers.png      (6 examples: 3 dark, 3 light wallpapers)
+├── widget-accessibility.png      (high contrast + dynamic type states)
+└── widget-spec-annotated.png     (measurements overlay for developers)
+```
+
+### App Store Screenshots
+
+```
+screenshots/ios/
+├── iPhone-15-Pro/
+│   ├── 01-widget-homescreen.png    (Show widget in context)
+│   ├── 02-app-today-tab.png        (Today tab with same content)
+│   ├── 03-app-browse-tab.png       (Calendar view)
+│   ├── 04-widget-closeup.png       (Zoomed widget detail)
+│   └── 05-multiple-widgets.png     (2-3 widgets on one screen)
+```
+
+**Dimensions:** 1284 x 2778 px (iPhone 15 Pro)
+
+---
+
+## FINAL NOTES
+
+**This specification is your source of truth for:**
+- All widget development (iOS Phase 1)
+- Android widget porting (Phase 4)
+- QA testing visual accuracy
+- App Store screenshot creation
+
+**Next step:** Use this spec to guide AI code generation in Phase 1.
+
+---
+
+**Status:** ✅ Complete specification, ready for implementation

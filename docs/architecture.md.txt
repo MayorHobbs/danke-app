@@ -1,0 +1,550 @@
+# Danke! - Technical Architecture Document
+
+**Version:** 1.0  
+**Last Updated:** January 18, 2026  
+**Status:** Pre-Development  
+
+---
+
+## 1. SYSTEM OVERVIEW
+
+Danke! is a **native mobile widget application** with minimal backend. The architecture prioritizes:
+- **Simplicity:** No complex servers, AI-friendly codebase
+- **Privacy:** Local-first data storage
+- **Performance:** Fast widget updates, offline-capable
+- **Vibe-codability:** Each component can be built by specialized AI agents
+
+---
+
+## 2. TECH STACK DECISIONS
+
+### 2.1 iOS Platform
+
+**Widget Framework:**
+- **WidgetKit** (native Apple framework)
+- **SwiftUI** for UI components
+- **Swift 5.9+**
+
+**Rationale:**
+- ✅ Best widget performance (native)
+- ✅ Lock screen widget support (iOS 16+)
+- ✅ AI-friendly (SwiftUI is declarative, well-documented)
+- ✅ Timeline Provider for scheduled updates
+
+**Architecture Pattern:**
+```
+iOS App
+├── WidgetExtension/
+│   ├── DankeWidget.swift (WidgetKit entry point)
+│   ├── TimelineProvider.swift (refresh scheduling)
+│   ├── WidgetView.swift (SwiftUI widget UI)
+│   └── ContentLoader.swift (fetch quotes/actions)
+│
+├── MainApp/
+│   ├── ContentView.swift (Today tab)
+│   ├── BrowseView.swift (calendar)
+│   ├── SettingsView.swift
+│   └── OnboardingView.swift
+│
+└── Shared/
+    ├── Models/
+    │   ├── DailyContent.swift
+    │   └── UserPreferences.swift
+    ├── Services/
+    │   ├── ContentService.swift (JSON parsing)
+    │   └── StorageService.swift (UserDefaults + App Group)
+    └── Resources/
+        └── content.json (embedded quotes/actions)
+```
+
+**Key iOS Decisions:**
+
+1. **App Groups:** Required for widget to share data with main app
+   - Identifier: `group.com.danke.shared`
+
+2. **Timeline Updates:**
+   - Midnight refresh (00:00 local time)
+   - Manual refresh on app launch
+   - Background refresh budget (iOS limits)
+
+3. **Storage:**
+   - **UserDefaults (App Group):** Current day index, user preferences
+   - **Local JSON:** All quotes/actions (bundled with app)
+   - **No cloud sync in MVP:** Keeps privacy-first
+
+### 2.2 Android Platform
+
+**Widget Framework:**
+- **Jetpack Glance** (modern declarative widgets)
+- **Jetpack Compose** for app UI
+- **Kotlin 1.9+**
+
+**Rationale:**
+- ✅ Glance is Compose for widgets (AI-friendly declarative syntax)
+- ✅ Modern Android standard (replacing legacy App Widget API)
+- ✅ Better vibe-codability than XML-based widgets
+
+**Architecture Pattern:**
+```
+Android App
+├── widget/
+│   ├── DankeWidget.kt (GlanceAppWidget)
+│   ├── WidgetContent.kt (Composable UI)
+│   └── WidgetReceiver.kt (update broadcasts)
+│
+├── ui/
+│   ├── TodayScreen.kt (Compose UI)
+│   ├── BrowseScreen.kt
+│   ├── SettingsScreen.kt
+│   └── OnboardingScreen.kt
+│
+└── data/
+    ├── models/
+    │   ├── DailyContent.kt
+    │   └── UserPreferences.kt
+    ├── repository/
+    │   └── ContentRepository.kt
+    └── local/
+        ├── SharedPrefs.kt
+        └── content.json (assets folder)
+```
+
+**Key Android Decisions:**
+
+1. **Widget Updates:**
+   - AlarmManager for midnight refresh
+   - WorkManager for background updates
+   - No polling (battery-friendly)
+
+2. **Storage:**
+   - **SharedPreferences:** Current day, user prefs
+   - **Assets folder:** JSON content (bundled)
+   - **Room Database (optional V2):** For reflection journal
+
+3. **Lock Screen Widget:**
+   - Android 14+ only (API 34+)
+   - Fallback: Home screen widget for older devices
+
+---
+
+## 3. BACKEND ARCHITECTURE
+
+### 3.1 Content Delivery (MVP)
+
+**No Traditional Backend Required**
+
+**Strategy: Embedded JSON**
+```
+App Package
+└── Resources/
+    ├── content.json (364 days of quotes/actions)
+    ├── metadata.json (version, last_updated)
+    └── schema.json (data structure docs)
+```
+
+**Why This Works:**
+- ✅ 100% offline capability
+- ✅ Zero hosting costs
+- ✅ Instant widget updates (no API latency)
+- ✅ Privacy-first (no server tracking)
+
+**Content Update Mechanism (V1):**
+- App Store/Play Store updates push new content.json
+- User updates app → new quotes appear
+
+**Limitations:**
+- Can't update content without app release
+- Acceptable for MVP (monthly/quarterly updates sufficient)
+
+### 3.2 Content Delivery (V2 - Future)
+
+**GitHub-Hosted JSON (Remote Updates)**
+
+**Architecture:**
+```
+GitHub Repo (Public)
+└── content/
+    ├── quotes.json
+    ├── actions.json
+    └── version.json
+
+Mobile App
+└── Fetches from raw.githubusercontent.com
+    ├── Cache locally
+    └── Fallback to bundled JSON if offline
+```
+
+**Benefits:**
+- ✅ Update content without app release
+- ✅ Still free (GitHub hosting)
+- ✅ Version control for content changes
+
+**Implementation:**
+```swift
+// iOS ContentService.swift
+let remoteURL = "https://raw.githubusercontent.com/yourusername/danke-content/main/content.json"
+let bundledURL = Bundle.main.url(forResource: "content", withExtension: "json")
+
+// Try remote, fallback to bundled
+```
+
+### 3.3 Future Backend (V3+)
+
+**If User Accounts Needed:**
+
+**Stack:**
+- **Supabase** (PostgreSQL + Auth + Storage)
+- **Free tier:** 500MB database, 50k users
+
+**Schema:**
+```sql
+users
+  - id (uuid)
+  - created_at (timestamp)
+  - domain_preference (text)
+
+reflections
+  - id (uuid)
+  - user_id (fk)
+  - day_number (int)
+  - completed (boolean)
+  - reflection_text (text)
+  - created_at (timestamp)
+```
+
+**API Endpoints:**
+- `POST /reflections` (save daily reflection)
+- `GET /reflections/:user_id` (retrieve journal)
+- `GET /stats/:user_id` (completion rate, domain breakdown)
+
+---
+
+## 4. DATA MODELS
+
+### 4.1 Core Models
+
+**DailyContent (Quote + Action Pair)**
+```swift
+struct DailyContent: Codable, Identifiable {
+    let id: Int              // Day number (1-364)
+    let quote: String        // 15-50 words
+    let quoteSource: String  // e.g., "The Art of Focus"
+    let action: String       // Specific task
+    let actionDuration: String // e.g., "15 min"
+    let domain: Domain       // Enum: consciousness, health, wealth, relationships
+    let difficulty: Difficulty // Enum: beginner, intermediate, advanced
+}
+
+enum Domain: String, Codable {
+    case consciousness, health, wealth, relationships
+}
+
+enum Difficulty: String, Codable {
+    case beginner, intermediate, advanced
+}
+```
+
+**UserPreferences**
+```swift
+struct UserPreferences: Codable {
+    var currentDay: Int = 1
+    var domainFocus: Domain? = nil // nil = balanced rotation
+    var widgetRefreshTime: Date = Date() // Midnight default
+    var eveningReminderEnabled: Bool = false
+    var eveningReminderTime: Date = Date() // 8 PM default
+}
+```
+
+**DailyReflection (Local Storage)**
+```swift
+struct DailyReflection: Codable {
+    let dayNumber: Int
+    let completed: Bool
+    let reflectionText: String?
+    let timestamp: Date
+}
+```
+
+---
+
+## 5. WIDGET REFRESH STRATEGY
+
+### 5.1 iOS Timeline Provider
+
+**Approach:**
+```swift
+struct DankeTimelineProvider: TimelineProvider {
+    func getTimeline(completion: @escaping (Timeline<Entry>) -> ()) {
+        // Generate entries for next 7 days
+        let entries = (0..<7).map { offset in
+            let entryDate = Calendar.current.date(byAdding: .day, value: offset, to: Date())!
+            let content = ContentService.shared.getContentForDay(getCurrentDay() + offset)
+            return DankeEntry(date: entryDate, content: content)
+        }
+        
+        let timeline = Timeline(entries: entries, policy: .atEnd)
+        completion(timeline)
+    }
+}
+```
+
+**Why 7 Days:**
+- iOS limits timeline entries
+- Balance between freshness and system load
+- Refreshes automatically at end of timeline
+
+### 5.2 Android Update Mechanism
+
+**Approach:**
+```kotlin
+class DankeWidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget = DankeWidget()
+    
+    // Midnight update via AlarmManager
+    fun scheduleMidnightUpdate(context: Context) {
+        val alarmManager = context.getSystemService(AlarmManager::class.java)
+        val midnight = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_YEAR, 1)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+        }
+        
+        alarmManager.setExact(
+            AlarmManager.RTC_WAKEUP,
+            midnight.timeInMillis,
+            pendingIntent
+        )
+    }
+}
+```
+
+---
+
+## 6. CONTENT ROTATION LOGIC
+
+**Algorithm:**
+```python
+# Pseudocode for daily content selection
+
+def get_todays_content(user_prefs):
+    # Base: Sequential progression
+    current_day = user_prefs.current_day  # 1-364
+    
+    # If user has domain preference
+    if user_prefs.domain_focus:
+        # Filter content by preferred domain
+        domain_content = content.filter(domain == user_prefs.domain_focus)
+        
+        # Still rotate through filtered subset
+        index = current_day % len(domain_content)
+        return domain_content[index]
+    
+    # Default: Show all content sequentially
+    index = current_day % 364  # Loop after day 364
+    return all_content[index]
+
+def increment_day():
+    # Called at midnight
+    user_prefs.current_day += 1
+    save_preferences(user_prefs)
+```
+
+**Edge Cases:**
+- Day 365+: Loop back to Day 1
+- User changes domain preference: Restart at Day 1 of new domain
+- User completes full year: Option to start advanced difficulty level
+
+---
+
+## 7. OFFLINE STRATEGY
+
+**All content bundled with app:**
+- Widget works 100% offline
+- No internet required for core functionality
+
+**Remote updates (V2):**
+- Background fetch when internet available
+- Cache updates locally
+- Graceful degradation (show bundled content if fetch fails)
+
+---
+
+## 8. SECURITY & PRIVACY
+
+### 8.1 Data Privacy
+
+**Principles:**
+- **Local-first:** All user data stored on device
+- **No tracking:** No analytics, no user behavior monitoring
+- **No accounts:** Eliminate data breach risk
+
+**What's Stored Locally:**
+- Current day number
+- User preferences (domain focus, notification time)
+- Daily reflections (optional, device-only)
+
+**What's NOT Collected:**
+- Name, email, phone
+- Device identifiers
+- Usage analytics
+- Crash reports (initially)
+
+### 8.2 Security Checklist
+
+**Pre-Launch Scan:**
+- [ ] Run **Vibeship Scanner** for vulnerabilities
+- [ ] Check for hardcoded API keys (none should exist)
+- [ ] Verify App Group permissions (iOS)
+- [ ] Test widget sandbox isolation
+
+**Common AI-Generated Vulnerabilities:**
+- Insecure data storage (use Keychain for sensitive data)
+- Exposed secrets in code
+- Improper widget data sharing
+
+---
+
+## 9. DEPLOYMENT PIPELINE
+
+### 9.1 Version Control
+
+**GitHub Repository Structure:**
+```
+danke-app/
+├── ios/                 # iOS Xcode project
+├── android/             # Android Gradle project
+├── content/             # Shared JSON content
+│   └── content.json
+├── docs/                # Documentation
+│   ├── prd.md
+│   ├── architecture.md
+│   └── design-system.md
+├── CHANGELOG.md
+├── FEATURES.md
+└── README.md
+```
+
+**Branching Strategy:**
+- `main` - Production-ready code
+- `develop` - Active development
+- `feature/*` - Individual features
+- `ios-mvp` - iOS-specific work
+- `android-mvp` - Android-specific work
+
+### 9.2 Build Pipeline
+
+**iOS (Xcode Cloud or Manual):**
+```bash
+# Build for TestFlight
+xcodebuild archive -scheme Danke -archivePath build/Danke.xcarchive
+xcodebuild -exportArchive -archivePath build/Danke.xcarchive -exportPath build/
+```
+
+**Android (GitHub Actions or Manual):**
+```bash
+# Build APK for testing
+./gradlew assembleRelease
+
+# Build AAB for Play Store
+./gradlew bundleRelease
+```
+
+---
+
+## 10. MONITORING & MAINTENANCE
+
+### MVP (No Analytics)
+- Manual user feedback (email, Twitter DMs)
+- App Store reviews
+- Crash reports (opt-in only)
+
+### V2 (Privacy-Respecting Analytics)
+- **Plausible Analytics** (GDPR-compliant, no cookies)
+- Track only: App opens, widget taps (no personal data)
+
+---
+
+## 11. TECH DEBT TO AVOID
+
+**Meta's Warnings Applied:**
+
+1. **Don't Over-Engineer:**
+   - Start with bundled JSON (not remote API)
+   - Avoid databases until V2
+   - No backend until absolutely necessary
+
+2. **Version Control Discipline:**
+   - Commit every feature addition
+   - Never commit broken code
+   - Use meaningful commit messages
+
+3. **Code Cleanliness:**
+   - Remove unused code immediately
+   - Don't accumulate "maybe later" features
+   - Use linters (SwiftLint, ktlint)
+
+4. **AI Code Review:**
+   - Before committing, ask AI: "Any security issues?"
+   - Use Vibeship Scanner before each release
+
+---
+
+## 12. FUTURE SCALABILITY
+
+**When to Upgrade Architecture:**
+
+**Trigger 1: 10k+ Users**
+- Add remote content updates (GitHub-hosted JSON)
+- Consider basic analytics (Plausible)
+
+**Trigger 2: 50k+ Users**
+- Add Supabase backend for user accounts
+- Enable cross-device sync
+- Consider paid tier (premium content)
+
+**Trigger 3: Partnership with Dan Koe**
+- Automated content pipeline
+- Exclusive subscriber content
+- Official branding updates
+
+---
+
+## 13. SPECIALIZED AGENT ASSIGNMENTS
+
+**Vibeship Spawner Skills Mapping:**
+
+**iOS Development:**
+- `mobile/ios-widgets` - WidgetKit specialist
+- `mobile/swiftui` - SwiftUI layout expert
+- `development/ios` - Core iOS app logic
+
+**Android Development:**
+- `mobile/android-widgets` - Glance widget specialist
+- `mobile/jetpack-compose` - Compose UI expert
+- `development/android` - Core Android app logic
+
+**Content & Design:**
+- `content/copywriting` - Dan Koe philosophy synthesis
+- `design/ui-ux` - Minimalist widget design
+- `design/mobile-design` - Mobile-first layouts
+
+**Quality Assurance:**
+- `security/mobile-security` - Pre-launch security audit
+- `testing/mobile-testing` - Widget behavior testing
+
+---
+
+## 14. APPROVAL CHECKLIST
+
+Before development begins:
+
+- [ ] Tech stack finalized (iOS: Swift/WidgetKit, Android: Kotlin/Glance)
+- [ ] Data models defined (DailyContent, UserPreferences)
+- [ ] Content format agreed upon (JSON schema)
+- [ ] GitHub repo initialized
+- [ ] Vibeship Spawner Skills installed
+- [ ] Security scanning plan in place
+
+---
+
+**Next Document:** `design-system.md` (Visual Design Specifications)

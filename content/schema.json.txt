@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "description": "Danke! content schema for daily quote/action pairs",
+  "structure": {
+    "day": "integer (1-364) - Sequential day number",
+    "quote": "string (15-50 words) - Philosophical insight",
+    "quoteSource": "string - Article title or concept name",
+    "action": "string - Specific, timeboxed micro-task",
+    "actionDuration": "string - Time estimate (e.g., '15 min')",
+    "domain": "enum - consciousness | health | wealth | relationships",
+    "difficulty": "enum - beginner | intermediate | advanced"
+  }
+}

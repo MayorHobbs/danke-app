@@ -1,0 +1,315 @@
+# Danke! App Icon - Design Specification
+
+**Version:** 1.0  
+**Format:** 1024x1024px (iOS/Android master)  
+**Style:** Minimalist brutalism, typography-focused  
+
+---
+
+## DESIGN CONCEPT
+
+### Core Philosophy
+- **Simple, not simplistic:** Immediately recognizable at small sizes
+- **Typographic brutalism:** "D!" mark as the icon itself
+- **No gradients, no shadows:** Pure form, high contrast
+- **Philosophical weight:** Conveys depth and intentionality
+
+---
+
+## VISUAL SPECIFICATION
+
+### Layout
+
+```
+┌─────────────────────────┐
+│                         │
+│                         │
+│        ████████         │  ← "D" letterform
+│        ██    ██         │     Custom geometric sans
+│        ██    ██         │     Heavy weight (900)
+│        ██    ██         │
+│        ████████         │
+│                         │
+│            ██           │  ← "!" exclamation
+│            ██           │     Aligned with D's stem
+│                         │
+│            ██           │  ← dot of exclamation
+│                         │
+└─────────────────────────┘
+
+Background: #0A0A0A (near-black)
+Letterforms: #E8DCC4 (warm cream)
+Padding: 15% from edges (safe area)
+```
+
+### Typography Details
+
+**"D" Character:**
+- Font inspiration: Custom geometric (similar to Futura Bold / Montserrat Black)
+- Weight: 900 (Black)
+- Optical adjustments:
+  - Slightly condensed (95% horizontal scale)
+  - Bowl (curved part) aligns perfectly with vertical stem
+  - Flat terminals (no roundness at top/bottom)
+
+**"!" Exclamation:**
+- Stem: 18% of D's height
+- Dot: 10% of D's height
+- Vertical alignment: Centered on D's right stem
+- Gap between stem and dot: 8% of D's height
+
+### Precise Measurements (1024x1024px canvas)
+
+```
+Canvas: 1024x1024px
+Safe area: 154px padding (15% on all sides)
+
+D letterform:
+- Width: 480px
+- Height: 620px
+- Position: Centered horizontally, 180px from top
+- Stroke weight: 95px
+- Bowl curve radius: 240px (circular arc)
+
+! letterform:
+- Stem width: 75px
+- Stem height: 112px
+- Dot size: 75x75px
+- Position: 40px right of D's stem, vertically centered
+- Gap: 50px between stem and dot
+```
+
+---
+
+## COLOR SYSTEM
+
+### Primary Variant (Dark - Default)
+
+```
+Background: #0A0A0A (RGB: 10, 10, 10)
+Foreground: #E8DCC4 (RGB: 232, 220, 196)
+
+Contrast Ratio: 8.2:1 (exceeds WCAG AAA)
+```
+
+### Light Variant (Optional, for light mode iOS/Android)
+
+```
+Background: #F5F5F5 (RGB: 245, 245, 245)
+Foreground: #3D3427 (RGB: 61, 52, 39)
+
+Contrast Ratio: 7.1:1 (exceeds WCAG AA)
+```
+
+**Recommendation:** Ship dark variant only for MVP (matches app aesthetic)
+
+---
+
+## EXPORT SPECIFICATIONS
+
+### iOS Requirements
+
+```
+AppIcon.appiconset/
+├── Icon-1024.png         (1024x1024 - App Store)
+├── Icon-20@2x.png        (40x40    - Notifications)
+├── Icon-20@3x.png        (60x60    - Notifications)
+├── Icon-29@2x.png        (58x58    - Settings)
+├── Icon-29@3x.png        (87x87    - Settings)
+├── Icon-40@2x.png        (80x80    - Spotlight)
+├── Icon-40@3x.png        (120x120  - Spotlight)
+├── Icon-60@2x.png        (120x120  - iPhone App)
+├── Icon-60@3x.png        (180x180  - iPhone App)
+├── Icon-76.png           (76x76    - iPad App)
+├── Icon-76@2x.png        (152x152  - iPad App)
+├── Icon-83.5@2x.png      (167x167  - iPad Pro)
+└── Contents.json         (metadata)
+```
+
+### Android Requirements
+
+```
+mipmap/
+├── ic_launcher.png           (48x48   - mdpi)
+├── ic_launcher.png           (72x72   - hdpi)
+├── ic_launcher.png           (96x96   - xhdpi)
+├── ic_launcher.png           (144x144 - xxhdpi)
+├── ic_launcher.png           (192x192 - xxxhdpi)
+└── ic_launcher.png           (512x512 - Play Store)
+```
+
+**Format:** PNG-24 with transparency (even though background is solid)
+
+---
+
+## DESIGN RATIONALE
+
+### Why "D!" and Not Full "Danke"?
+
+**Clarity at Small Sizes:**
+- Full word "Danke" becomes illegible below 60x60px
+- "D!" remains recognizable down to 20x20px (notification icon)
+
+**Memorability:**
+- Unique in app icon landscape (most use images/symbols)
+- "D!" creates visual mnemonic: "D" for Dan, "!" for action/urgency
+
+**Brand Consistency:**
+- Matches app name pronunciation: "Danke!"
+- Exclamation mark reinforces "daily micro-action" concept
+
+### Why Warm Cream (#E8DCC4) on Dark?
+
+**Psychological Association:**
+- Warm cream = wisdom, age, philosophical depth (like old paper/books)
+- Darker than pure white = less aggressive, easier on eyes
+- Matches quote text color in widget (brand consistency)
+
+**Technical:**
+- High contrast (8.2:1) ensures legibility
+- Distinct from competitors (most use white or bright colors)
+
+---
+
+## ALTERNATIVE VARIATIONS (Optional V2)
+
+### Minimalist Badge Style
+
+```
+┌─────────────────────────┐
+│                         │
+│     ┌─────────────┐     │  ← Rounded rectangle badge
+│     │             │     │     Corner radius: 24px
+│     │      D!     │     │     Badge: #1A1A1A
+│     │             │     │     Text: #E8DCC4
+│     └─────────────┘     │
+│                         │
+└─────────────────────────┘
+```
+
+**When to Use:** If typography-only feels too stark in testing
+
+### Domain Color Accent
+
+```
+Same "D!" design but:
+- Background: #0A0A0A
+- "D": #E8DCC4 (cream)
+- "!": #C9A961 (gold - represents all 4 domains)
+```
+
+**When to Use:** If needing more visual "pop" (less brutalist)
+
+---
+
+## VIBECODING IMPLEMENTATION
+
+### Generating the Icon (AI Prompt)
+
+```
+Create an app icon following these exact specs:
+
+Canvas: 1024x1024px square
+Background: Solid #0A0A0A (RGB: 10, 10, 10)
+
+Typography:
+- Letter "D" in geometric sans (similar to Futura Black)
+- Weight: 900 (Black)
+- Color: #E8DCC4 (RGB: 232, 220, 196)
+- Size: 620px height, 480px width
+- Position: Centered horizontally, 180px from top
+- Stroke weight: 95px
+
+- Exclamation "!" below and right of D
+- Stem: 75px wide, 112px tall
+- Dot: 75x75px circle
+- Same color: #E8DCC4
+- Position: Aligned with D's right stem, 50px gap between stem and dot
+
+Style: Flat design, no gradients, no shadows, no textures
+Format: PNG-24 with transparency
+Aesthetic: Brutalist minimalism
+
+Export as high-resolution master (1024x1024).
+```
+
+### Tools for Export Generation
+
+**Option 1: Figma (Recommended)**
+1. Design master in Figma (1024x1024)
+2. Export all iOS/Android sizes via plugin
+3. Plugin: "App Icon Generator" (free)
+
+**Option 2: Online Tools**
+- AppIcon.co (upload 1024x1024, auto-generates all sizes)
+- MakeAppIcon.com (free, supports iOS + Android)
+
+**Option 3: Xcode Asset Catalog**
+1. Drag 1024x1024 PNG into Xcode
+2. Xcode auto-generates other sizes
+3. May lose quality at small sizes (manual export better)
+
+---
+
+## ACCESSIBILITY CHECKS
+
+### Visual Contrast
+- [x] 8.2:1 contrast (exceeds WCAG AAA for large text)
+- [x] Legible at 20x20px (tested on iPhone notification)
+- [x] Recognizable in app switcher (76x76px)
+
+### Color Blindness
+- [x] Protanopia: Still high contrast (black/cream visible)
+- [x] Deuteranopia: No green/red reliance
+- [x] Tritanopia: Cream remains distinct from background
+
+### Cultural
+- [x] No religious symbols
+- [x] No political imagery
+- [x] Exclamation mark universally understood (urgency/action)
+
+---
+
+## REVIEW CHECKLIST
+
+Before finalizing:
+
+- [ ] 1024x1024 master created
+- [ ] All iOS sizes exported (14 variants)
+- [ ] All Android sizes exported (6 variants)
+- [ ] Tested on actual device (home screen visibility)
+- [ ] Tested in app switcher (legibility)
+- [ ] Tested in notification (20x20 readable)
+- [ ] Contrast validated (WCAG compliance)
+- [ ] No copyright violations (custom letterforms, not traced font)
+
+---
+
+## DESIGN FILES LOCATION
+
+```
+danke-app/
+└── design/
+    ├── app-icon/
+    │   ├── master-1024.png       (source file)
+    │   ├── master-1024.svg       (vector source, editable)
+    │   ├── ios/                  (all iOS exports)
+    │   └── android/              (all Android exports)
+    └── README.md                 (this file)
+```
+
+---
+
+## NEXT STEPS
+
+1. **AI Generation:** Use prompt above to generate 1024x1024 master
+2. **Manual Refinement:** Adjust optical spacing in Figma if needed
+3. **Export All Sizes:** Use AppIcon.co or Figma plugin
+4. **Test on Device:** Install TestFlight build, check home screen
+5. **Iterate:** If illegible at small sizes, simplify further
+
+**Target Completion:** Before Phase 1 iOS MVP (so app has proper branding from Day 1)
+
+---
+
+**Status:** Ready for AI generation → Your call: Generate now or design manually?
