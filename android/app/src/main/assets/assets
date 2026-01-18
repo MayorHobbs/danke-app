@@ -1,0 +1,65 @@
+[
+  {
+    "day": 1,
+    "quote": "Focus is the ability to say no to everything except what matters most. Your attention is the most valuable resource you possess.",
+    "quoteSource": "The Art of Focus",
+    "action": "Write down 3 things you're currently saying yes to that don't align with your most important goal. Cross one out today.",
+    "actionDuration": "10 min",
+    "domain": "consciousness",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 2,
+    "quote": "Your health is the foundation of everything. Without energy, ideas remain ideas. Without clarity, action becomes scattered.",
+    "quoteSource": "4-Hour Workday",
+    "action": "Walk for 20 minutes without headphones. Observe when your breath becomes shallow and consciously deepen it.",
+    "actionDuration": "20 min",
+    "domain": "health",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 3,
+    "quote": "Value is created by solving problems. The bigger the problem you solve, the more value you capture.",
+    "quoteSource": "One-Person Business",
+    "action": "Identify one $100 problem in your life right now. Write down what you'd pay someone to solve it.",
+    "actionDuration": "15 min",
+    "domain": "wealth",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 4,
+    "quote": "Most people adopt beliefs from society without question. Conscious living means examining what you've inherited versus what you've chosen.",
+    "quoteSource": "The Self-Awareness Spiral",
+    "action": "List 3 beliefs you hold about success. For each one, ask: Did I consciously choose this, or inherit it?",
+    "actionDuration": "15 min",
+    "domain": "consciousness",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 5,
+    "quote": "Relationships thrive on genuine curiosity. Ask better questions. Listen without the intent to respond.",
+    "quoteSource": "The Art of Conversation",
+    "action": "Ask someone today: 'What's energizing you right now?' Then listen for 5 minutes without offering advice.",
+    "actionDuration": "10 min",
+    "domain": "relationships",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 6,
+    "quote": "Writing clarifies thinking. If you can't write about it clearly, you don't understand it deeply enough.",
+    "quoteSource": "Digital Economics",
+    "action": "Write 250 words about one specific problem you solved this week. How did you solve it? What did you learn?",
+    "actionDuration": "20 min",
+    "domain": "wealth",
+    "difficulty": "beginner"
+  },
+  {
+    "day": 7,
+    "quote": "Rest is not laziness. Deep work requires deep recovery. Your nervous system needs downtime to integrate growth.",
+    "quoteSource": "Energy Management",
+    "action": "Schedule one 30-minute block this week where you do absolutely nothing. No phone, no book, no productivity.",
+    "actionDuration": "5 min",
+    "domain": "health",
+    "difficulty": "beginner"
+  }
+]
