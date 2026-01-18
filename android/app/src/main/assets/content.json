@@ -61,5 +61,68 @@
     "actionDuration": "5 min",
     "domain": "health",
     "difficulty": "beginner"
+  },
+  {
+    "day": 8,
+    "quote": "You can't fix your life until you're honest about what's broken. Radical honesty is the first step to radical change.",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "Write down 5 things in your life that aren't working. Be brutally honest. Don't soften it. Just acknowledge reality.",
+    "actionDuration": "15 min",
+    "domain": "consciousness",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 9,
+    "quote": "Your morning is your life in miniature. Win the first hour and you've already won the day.",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "Tomorrow morning, wake up and do ONE thing before touching your phone. Make it physical: walk, stretch, or cold shower.",
+    "actionDuration": "30 min",
+    "domain": "health",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 10,
+    "quote": "You're not creating goals. You're creating a vision of who you want to become. Goals expire. Identity compounds.",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "Describe your ideal day 3 years from now. What time do you wake up? What do you do first? Who are you with? Be specific.",
+    "actionDuration": "20 min",
+    "domain": "consciousness",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 11,
+    "quote": "Energy management beats time management. You have 24 hours regardless. The question is: how much of you is actually present?",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "Track your energy today. Every 2 hours, rate it 1-10. Notice: what drains you? What fills you? No judgments, just data.",
+    "actionDuration": "5 min",
+    "domain": "health",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 12,
+    "quote": "The people you spend time with are either lifting you up or holding you down. There's no neutral ground.",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "List the 5 people you spend the most time with. For each, ask: Do they challenge me to grow, or reinforce my limitations?",
+    "actionDuration": "15 min",
+    "domain": "relationships",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 13,
+    "quote": "Single-tasking is a superpower. The world rewards depth, not breadth. Go narrow, go deep, go obsessive.",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "Choose ONE project today. Remove all other tabs, apps, and distractions. Work on it for 90 uninterrupted minutes.",
+    "actionDuration": "90 min",
+    "domain": "wealth",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 14,
+    "quote": "You're either a creator or a consumer. There is no middle ground. Every hour you spend consuming is an hour you're not building.",
+    "quoteSource": "How to Fix Your Life in One Day",
+    "action": "Create something today. Anything. A tweet, a sketch, 500 words, a video. Just make something that didn't exist before.",
+    "actionDuration": "30 min",
+    "domain": "wealth",
+    "difficulty": "intermediate"
   }
 ]

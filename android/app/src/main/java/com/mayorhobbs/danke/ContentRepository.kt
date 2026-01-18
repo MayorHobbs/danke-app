@@ -27,11 +27,11 @@ object ContentRepository {
         }
         val prefs = context.getSharedPreferences("danke_prefs", Context.MODE_PRIVATE)
         val currentDay = prefs.getInt("current_day", 1)
-        val index = (currentDay - 1) % allContent.size
-        return allContent.getOrNull(index) ?: getDefaultContent()
+        val dayIndex = (currentDay - 1) % allContent.size
+        return allContent.getOrNull(dayIndex) ?: getDefaultContent()
     }
 
-    private fun getDefaultContent() = DailyContent(
+    private fun getDefaultContent(): DailyContent = DailyContent(
         day = 1,
         quote = "Focus is the ability to say no to everything except what matters most.",
         quoteSource = "The Art of Focus",

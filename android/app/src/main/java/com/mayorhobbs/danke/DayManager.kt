@@ -18,8 +18,11 @@ object DayManager {
     private const val KEY_LAST_UPDATE = "last_update_date"
 
     fun getCurrentDay(context: Context): Int {
+        // TEMPORARY: Force day 8 to test new content
         val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        checkAndUpdateDay(context) // Check if day should increment
+        prefs.edit().putInt(KEY_CURRENT_DAY, 8).apply()
+
+        checkAndUpdateDay(context)
         return prefs.getInt(KEY_CURRENT_DAY, 1)
     }
 

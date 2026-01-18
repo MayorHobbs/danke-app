@@ -150,11 +150,11 @@ fun DankeWidgetContent(context: Context) {
 
             // Credit footer
             Text(
-                text = "by Mayor Hobbs",
+                text = "Crafted by Mayor Hobbs. Inspired by Dan Koe's philosophy",
                 style = TextStyle(
                     fontSize = 9.sp,
                     color = ColorProvider(Color(0xFFA0A0A0).copy(alpha = 0.5f)),
-                    fontWeight = FontWeight.Light
+                    fontWeight = FontWeight.Normal
                 )
             )
         }
