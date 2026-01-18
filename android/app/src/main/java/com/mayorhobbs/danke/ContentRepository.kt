@@ -22,6 +22,9 @@ object ContentRepository {
 
     fun getCurrentDayContent(context: Context): DailyContent {
         loadContent(context)
+        if (allContent.isEmpty()) {
+            return getDefaultContent()
+        }
         val prefs = context.getSharedPreferences("danke_prefs", Context.MODE_PRIVATE)
         val currentDay = prefs.getInt("current_day", 1)
         val index = (currentDay - 1) % allContent.size
