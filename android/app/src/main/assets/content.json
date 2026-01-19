@@ -124,5 +124,131 @@
     "actionDuration": "30 min",
     "domain": "wealth",
     "difficulty": "intermediate"
+  },
+  {
+    "day": 15,
+    "quote": "Your business model is your life model. If your business drains you, your life will reflect that exhaustion.",
+    "quoteSource": "One-Person Business Framework",
+    "action": "List 3 ways you currently make or could make money. Circle the one that energizes you most. Why?",
+    "actionDuration": "15 min",
+    "domain": "wealth",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 16,
+    "quote": "Clarity comes from action, not thought. You don't think your way into a new life. You act your way into a new way of thinking.",
+    "quoteSource": "The Action Bias",
+    "action": "Pick one small decision you've been overthinking. Set a 5-minute timer. Decide by the time it ends. Then act immediately.",
+    "actionDuration": "10 min",
+    "domain": "consciousness",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 17,
+    "quote": "Your body is the vehicle for your mind. Neglect the vehicle and the mind goes nowhere.",
+    "quoteSource": "Physical Intelligence",
+    "action": "Do 10 push-ups, 10 squats, and stretch for 2 minutes. Right now. No excuses. Notice how your mind feels after.",
+    "actionDuration": "5 min",
+    "domain": "health",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 18,
+    "quote": "Boundaries aren't walls. They're filters. They keep the wrong things out so the right things can flourish.",
+    "quoteSource": "The Art of Saying No",
+    "action": "Identify one person or commitment that consistently drains your energy. Write one sentence declining their next request.",
+    "actionDuration": "10 min",
+    "domain": "relationships",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 19,
+    "quote": "Boredom is the birthplace of creativity. Your best ideas emerge when you stop filling every moment with stimulation.",
+    "quoteSource": "The Attention Economy",
+    "action": "Sit in silence for 10 minutes. No music, no podcast, no scrolling. Just you and your thoughts. What emerges?",
+    "actionDuration": "10 min",
+    "domain": "consciousness",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 20,
+    "quote": "Skills compound. Credentials expire. Invest in what you can't take away from yourself.",
+    "quoteSource": "The New Education",
+    "action": "Choose one skill you want to build. Spend 30 minutes today learning it through practice, not theory.",
+    "actionDuration": "30 min",
+    "domain": "wealth",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 21,
+    "quote": "Sleep is the foundation. Everything else is decoration. Sacrifice sleep and you sacrifice everything built on top of it.",
+    "quoteSource": "Recovery Protocols",
+    "action": "Set a sleep alarm for tonight. 8 hours before you need to wake up. When it goes off, stop everything and go to bed.",
+    "actionDuration": "5 min",
+    "domain": "health",
+    "difficulty": "intermediate"
+  },
+  {
+    "day": 22,
+    "quote": "Your environment shapes your identity more than your willpower ever will. Design the environment, and behavior follows.",
+    "quoteSource": "Environmental Design",
+    "action": "Remove one distraction from your workspace. Delete one app. Unfollow 5 accounts. Make the default path the productive path.",
+    "actionDuration": "10 min",
+    "domain": "consciousness",
+    "difficulty": "advanced"
+  },
+  {
+    "day": 23,
+    "quote": "Comparison is the thief of joy only when you compare your process to someone else's results. Compare trajectories, not snapshots.",
+    "quoteSource": "The Comparison Trap",
+    "action": "Think of someone you admire. Instead of envying their current position, research their first 3 years. What did THAT look like?",
+    "actionDuration": "20 min",
+    "domain": "consciousness",
+    "difficulty": "advanced"
+  },
+  {
+    "day": 24,
+    "quote": "Deep relationships require presence. Presence requires putting down your phone and looking people in the eyes.",
+    "quoteSource": "The Presence Practice",
+    "action": "Tonight, put your phone in another room during dinner or conversation. Notice the difference in connection quality.",
+    "actionDuration": "30 min",
+    "domain": "relationships",
+    "difficulty": "advanced"
+  },
+  {
+    "day": 25,
+    "quote": "Resistance reveals importance. The things you avoid most are often the things that would change your life most.",
+    "quoteSource": "The Resistance Principle",
+    "action": "Identify the one task you've been avoiding for weeks. Do it for just 10 minutes today. Just start. Momentum handles the rest.",
+    "actionDuration": "10 min",
+    "domain": "wealth",
+    "difficulty": "advanced"
+  },
+  {
+    "day": 26,
+    "quote": "Fasting isn't about deprivation. It's about giving your body space to heal instead of constantly processing input.",
+    "quoteSource": "Metabolic Intelligence",
+    "action": "Skip breakfast tomorrow. Have your first meal at noon. Notice your mental clarity in the morning. Track how you feel.",
+    "actionDuration": "5 min",
+    "domain": "health",
+    "difficulty": "advanced"
+  },
+  {
+    "day": 27,
+    "quote": "Your self-image is the ceiling of your potential. You can't outperform your identity. Upgrade the story you tell about yourself.",
+    "quoteSource": "Identity Architecture",
+    "action": "Complete this sentence 10 times: 'I am the type of person who...' Write identities, not achievements.",
+    "actionDuration": "15 min",
+    "domain": "consciousness",
+    "difficulty": "advanced"
+  },
+  {
+    "day": 28,
+    "quote": "Teaching is the highest form of learning. You don't truly understand something until you can explain it simply to others.",
+    "quoteSource": "The Teaching Method",
+    "action": "Pick one thing you learned this month. Write a 300-word explanation as if teaching a complete beginner. Post it somewhere.",
+    "actionDuration": "25 min",
+    "domain": "wealth",
+    "difficulty": "advanced"
   }
 ]

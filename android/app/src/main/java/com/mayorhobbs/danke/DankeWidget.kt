@@ -14,6 +14,7 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.layout.*
@@ -42,7 +43,10 @@ fun DankeWidgetContent(context: Context) {
         modifier = GlanceModifier
             .fillMaxSize()
             .background(Color(0xFF1A1A1A))
-            .padding(16.dp),
+            .padding(2.dp)  // Outer padding for border effect
+            .background(Color(0xFF2A2A2A))  // Slightly lighter inner background
+            .cornerRadius(12.dp)
+            .padding(14.dp),  // Inner content padding
         verticalAlignment = Alignment.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -64,13 +68,14 @@ fun DankeWidgetContent(context: Context) {
         Text(
             text = content.quote,
             style = TextStyle(
-                fontSize = 15.sp,
+                fontSize = 16.sp,  // Was 15sp → Now 16sp
+                fontWeight = FontWeight.Normal,
                 color = ColorProvider(Color(0xFFE8DCC4))
             ),
             maxLines = 4
         )
 
-        Spacer(modifier = GlanceModifier.height(12.dp))
+        Spacer(modifier = GlanceModifier.height(16.dp))
 
         // Action section
         Row(
@@ -79,13 +84,41 @@ fun DankeWidgetContent(context: Context) {
                 .fillMaxWidth()
                 .clickable(actionRunCallback<ToggleCompletionCallback>())
         ) {
-            Text(
-                text = if (isCompleted) "☑" else "☐",
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    color = ColorProvider(if (isCompleted) Color(0xFF7FA66A) else Color(0xFFF5F5F5))
-                )
-            )
+            if (isCompleted) {
+                Box(
+                    modifier = GlanceModifier
+                        .size(24.dp)
+                        .background(Color(0xFF2A2A2A))
+                        .cornerRadius(4.dp)
+                        .padding(2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "☑",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = ColorProvider(Color(0xFF7FA66A))
+                        )
+                    )
+                }
+            } else {
+                Box(
+                    modifier = GlanceModifier
+                        .size(24.dp)  // Larger checkbox
+                        .background(Color(0xFF2A2A2A))
+                        .cornerRadius(4.dp)
+                        .padding(2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "☐",
+                        style = TextStyle(
+                            fontSize = 18.sp,
+                            color = ColorProvider(Color(0xFFF5F5F5))
+                        )
+                    )
+                }
+            }
 
             Spacer(modifier = GlanceModifier.width(8.dp))
 
@@ -93,7 +126,7 @@ fun DankeWidgetContent(context: Context) {
                 Text(
                     text = content.action,
                     style = TextStyle(
-                        fontSize = 13.sp,
+                        fontSize = 14.sp,  // Was 13sp → Now 14sp
                         fontWeight = FontWeight.Medium,
                         color = ColorProvider(Color(0xFFF5F5F5))
                     ),
@@ -105,41 +138,41 @@ fun DankeWidgetContent(context: Context) {
                 Text(
                     text = "(${content.actionDuration})",
                     style = TextStyle(
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,  // Was 11sp → Now 12sp
                         color = ColorProvider(Color(0xFFA0A0A0))
                     )
                 )
             }
         }
 
-        Spacer(modifier = GlanceModifier.defaultWeight())
+        Spacer(modifier = GlanceModifier.height(12.dp))
 
         // Metadata + Credit
         Column(
             modifier = GlanceModifier.fillMaxWidth()
         ) {
-            // Domain tag + source
+            // Metadata section
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = content.domain.replaceFirstChar { it.uppercase() },
                     style = TextStyle(
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,  // Was 11sp → Now 12sp
                         fontWeight = FontWeight.Medium,
                         color = ColorProvider(Color(content.getDomainColor()))
                     ),
                     modifier = GlanceModifier
                         .background(Color(content.getDomainColor()).copy(alpha = 0.3f))
-                        .padding(horizontal = 6.dp, vertical = 3.dp)
+                        .padding(horizontal = 8.dp, vertical = 4.dp)  // Increased padding for easier reading
                 )
 
-                Spacer(modifier = GlanceModifier.width(4.dp))
+                Spacer(modifier = GlanceModifier.width(6.dp))  // Was 4dp → Now 6dp
 
                 Text(
                     text = "• ${content.quoteSource}",
                     style = TextStyle(
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,  // Was 11sp → Now 12sp
                         color = ColorProvider(Color(0xFFA0A0A0))
                     ),
                     maxLines = 1

@@ -8,11 +8,12 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/danke_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/danke_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Danke">
+        android:theme="@style/Theme.Danke"
+        tools:replace="android:icon,android:roundIcon">
         <receiver
             android:name=".DankeWidgetReceiver"
             android:exported="true">
