@@ -1,12 +1,28 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
 
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
+}
+
 android {
     namespace = "com.mayorhobbs.danke"
-    compileSdk {
-        version = release(36)
+    compileSdk = 36
+
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("danke-keystore.jks")
+            storePassword = keystoreProperties.getProperty("storePassword")
+            keyAlias = "danke-release-key"
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storeType = "PKCS12"
+        }
     }
 
     defaultConfig {
@@ -26,6 +42,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
